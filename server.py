@@ -54,6 +54,23 @@ def user_list():
 #                            user=user_object,
 #                            movie_ratings=movie_ratings)
 
+@app.route("/login")
+def login_form():
+    """Show user log in form"""
+    return render_template("login.html")
+
+
+@app.route("/login", methods=["POST"])
+def login_process():
+    """Show user log in form"""
+    return render_template("users.html")
+
+
+@app.route("/generator")
+def generator_form():
+    """Show generated map and form"""
+    return render_template("generator.html")
+
 # SELECT name FROM stars WHERE name ~ '[A-Za-z]';
 
 if __name__ == "__main__":
