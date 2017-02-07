@@ -1,11 +1,9 @@
-"""Movie Ratings."""
+"""Stars"""
 
 from jinja2 import StrictUndefined
 
 from flask import Flask, jsonify, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-
-import decimal
 
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
@@ -38,31 +36,48 @@ def user_list():
     return render_template("star_list.html", stars=stars)
 
 
-# @app.route("/stars/<star_id>")
-# def show_user(user_id):
+@app.route("/stars/<star_id>")
+def show_user(star_id):
+    """Show info about a star"""
+    star = Star.query.filter_by(star_id=star_id).one()
+    return render_template("star_info.html",
+                           star=star)
 
-#     user_object = User.query.filter_by(user_id=user_id).one()
-#     rating_objects = Rating.query.filter_by(user_id=user_id).all()
-#     movie_ratings = {}
-
-#     for rating_object in rating_objects:
-#         movie_object = Movie.query.filter_by(movie_id=rating_object.movie_id).one()
-#         movie_ratings[movie_object.movie_id] = {'score': rating_object.score,
-#                                                 'title': movie_object.title}
-
-#     return render_template("user_info.html",
-#                            user=user_object,
-#                            movie_ratings=movie_ratings)
 
 @app.route("/login")
 def login_form():
     """Show user log in form"""
-    return render_template("login.html")
+    if session.get('logged_in') is True:
+        flash('user already signed in')
+        return redirect('/')
+    else:
+        return render_template("login.html")
 
 
 @app.route("/login", methods=["POST"])
 def login_process():
-    """Show user log in form"""
+    """Process Log-in, checking password"""
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    try:
+        user = User.query.filter_by(username=username).one()
+        if password == user.password:
+            pass   # login -- for clairty in code
+        else:
+            flash("Wrong Password")
+            return redirect('/login')
+
+    except sqlalchemy.orm.exc.NoResultFound:
+        flash("%s not found, please try again or register a new account" % (username))
+        return redirect('/login')
+
+    user_id = user.user_id
+    session['user_id'] = user_id
+    session['logged_in'] = True
+    print(session)
+    flash("Logged In")
+    return redirect("/users/" + str(user_id))
     return render_template("users.html")
 
 
@@ -71,7 +86,56 @@ def generator_form():
     """Show generated map and form"""
     return render_template("generator.html")
 
-# SELECT name FROM stars WHERE name ~ '[A-Za-z]';
+
+@app.route("/register")
+def register_form():
+
+    if session.get('logged_in') is True:
+        flash('user already signed in')
+        return redirect('/')
+    else:
+        return render_template("register_form.html")
+
+
+@app.route("/register", methods=["POST"])
+def register_process():
+
+    username = request.form.get('username')
+    password = request.form.get('password')
+    email = request.form.get('e-mail')
+
+    try:
+        user = User.query.filter_by(username=username).one()
+        flash('User already exists, please sign in or use another email')
+        return redirect('/register')
+
+    except sqlalchemy.orm.exc.NoResultFound:
+        user = User(username=username,
+                    password=password,
+                    email=email)
+
+        # We need to add to the session and commit
+        db.session.add(user)
+        db.session.commit()
+
+    session['user_id'] = user.user_id
+    session['logged_in'] = True
+    print(session)
+    flash("Logged In")
+    return redirect("/")
+
+
+@app.route('/logout')
+def logout_process():
+    if session.get('logged_in') is True:
+        del session['user_id']
+        del session['logged_in']
+        flash('logged out')
+    else:
+        flash('not logged in')
+
+    return redirect('/login')
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
@@ -86,3 +150,5 @@ if __name__ == "__main__":
     DebugToolbarExtension(app)
 
     app.run(port=5000, host='0.0.0.0')
+
+# SELECT name FROM stars WHERE name ~ '[A-Za-z]';

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Star Info{% endblock %}
+
+{% block content %}
+
+<h2>Info for Star {{ star.star_id }}</h2>
+
+{% if (star.name | default("False", true) != "False") %}
+    <h3>Proper Name:</h3> {{ star.name}}
+{% endif %}
+<h3>Right Ascension:</h3> {{ star.ra }}
+
+<h3>Declination:</h3> {{ star.dec }}
+
+<h3>Distance from Earth:</h3> {{ star.distance }}
+
+<h3>Magnitude:</h3> {{ star.magnitude }}
+
+<h3>Color Index:</h3>{{ star.color_index }}
+
+{% endblock %}

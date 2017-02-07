@@ -2,7 +2,6 @@
 <html>
 <head>
 <title>Night Generator - {% block title %}PAGE TITLE GOES HERE{% endblock %}</title>
-
   {% with messages = get_flashed_messages() %}
   {% if messages %}
     <ul class=flashes>
@@ -12,13 +11,17 @@
     </ul>
   {% endif %}
   {% endwith %}
-
  <link rel="stylesheet" href='/static/styles.css'>
 </head>
 
-  {% block content %}CONTENT HERE{% endblock %}
+<a href="/"><button type=button>homepage</button></a>
+<a href="/login"><button type=button>log in</button></a>
+<a href="/register"><button type=button>register</button></a>
+<a href="/logout"><button type=button>log out</button></a>
+<br><br>
+
+{% block content %}CONTENT HERE{% endblock %}
 
 <script src='/static/scripts.js'></script>
-
 </body>
 </html>

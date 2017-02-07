@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Registration{% endblock %}
+{% block content %}
+
+<h2>Create an account:</h2>
+<p> Creating an account allows you to save stars of interest and highlight them 
+    in generated sky images
+</p>
+
+<form action='/register' method='POST' id='registration' class='user-info'>
+    username: <input type='text' name='username' id='username'><br>
+    password: <input type='password' name='password' id='password'><br>
+    e-mail: <input type='text' name='e-mail' id='e-mail'><br><br>
+    <input type='submit' value='Submit'>
+</form>
+
+{% endblock %}
+
+{% block javascript %}registration{% endblock %}

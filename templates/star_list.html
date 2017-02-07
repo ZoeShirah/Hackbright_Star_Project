@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}User List{% endblock %}
+{% block content %}
+
+    <h2>Stars</h2>
+    <ul>
+      {% for star in stars %}
+          <li>
+              <a href="/stars/{{ star.star_id }}">
+                {{ star.star_id }} ({{ star.ra }}, {{ star.dec }})
+              </a>
+          </li>
+      {% endfor %}
+    </ul>
+
+{% endblock %}
