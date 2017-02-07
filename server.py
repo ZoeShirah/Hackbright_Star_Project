@@ -29,11 +29,17 @@ def index():
 
 
 @app.route("/stars")
-def user_list():
+def user_list(last=0):
     """Show list of stars."""
+    try:
+        last = int(request.args.get("last"))
+    except TypeError:
+        last = 0
 
-    stars = Star.query.all()
-    return render_template("star_list.html", stars=stars)
+    stars = Star.query.order_by(Star.star_id).offset(last).limit(1000).all()
+    last = last + 1000
+
+    return render_template("star_list.html", stars=stars, last=last)
 
 
 @app.route("/stars/<star_id>")

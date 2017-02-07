@@ -12,5 +12,9 @@
           </li>
       {% endfor %}
     </ul>
+    <form action="/stars">
+      <input type="integer" name="last" value={{ last }}>
+      <input type="submit" value="Next Page">
+    </form>
 
 {% endblock %}
