@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+<title>{% block title %}PAGE TITLE GOES HERE{% endblock %}</title>
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  {% endwith %}
+
+ <link rel="stylesheet" href='/static/styles.css'>
+</head>
+
+  {% block content %}CONTENT HERE{% endblock %}
+
+<script src='/static/scripts.js'></script>
+
+</body>
+</html>
