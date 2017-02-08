@@ -62,15 +62,10 @@ if __name__ == "__main__":
     # leave you in a state of being able to work with the database
     # directly.
 
-    # So that we can use Flask-SQLAlchemy, we'll make a Flask app
-    # from flask import Flask
-    # app = Flask(__name__)
-
     from server import app
     connect_to_db(app)
 
-    # Create our tables and some sample data
+    # Create our tables
     db.create_all()
-    #example_data()
 
     print "Connected to DB."

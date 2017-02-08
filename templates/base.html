@@ -15,9 +15,14 @@
 </head>
 
 <a href="/"><button type=button>homepage</button></a>
-<a href="/login"><button type=button>log in</button></a>
-<a href="/register"><button type=button>register</button></a>
-<a href="/logout"><button type=button>log out</button></a>
+{% if 'user_id' in session %}
+  <a href="/logout"><button type=button>log out</button></a>
+  <a href="/users/{{ session.get('user_id') }}">
+    <button type=button>Your Profile</button></a>
+{% else %}
+  <a href="/login"><button type=button>log in</button></a>
+  <a href="/register"><button type=button>register</button></a>
+{% endif %}
 <br><br>
 
 {% block content %}CONTENT HERE{% endblock %}

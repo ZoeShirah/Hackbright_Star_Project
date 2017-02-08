@@ -29,21 +29,21 @@ def index():
 
 
 @app.route("/stars")
-def user_list(last=0):
-    """Show list of stars."""
+def star_list(last=0):
+    """Show list of stars, 1000 at a time (there are 87,353 stars)"""
     try:
-        last = int(request.args.get("last"))
+        last = int(request.args.get("last"))-1
     except TypeError:
         last = 0
 
     stars = Star.query.order_by(Star.star_id).offset(last).limit(1000).all()
-    last = last + 1000
+    last = last + 1001
 
     return render_template("star_list.html", stars=stars, last=last)
 
 
 @app.route("/stars/<star_id>")
-def show_user(star_id):
+def show_star(star_id):
     """Show info about a star"""
     star = Star.query.filter_by(star_id=star_id).one()
     return render_template("star_info.html",
@@ -141,6 +141,14 @@ def logout_process():
         flash('not logged in')
 
     return redirect('/login')
+
+
+@app.route("/users/<user_id>")
+def show_user(user_id):
+    """Show info about a user"""
+    user = User.query.filter_by(user_id=user_id).one()
+    return render_template("user_info.html",
+                           user=user)
 
 
 if __name__ == "__main__":
