@@ -9,8 +9,5 @@
 #d3north{
     position: absolute;
     z-index: 2;
-    left: 0px; 
-    top: 0px;
-    z-index: 2;
-
+    top: 115px;
 }
