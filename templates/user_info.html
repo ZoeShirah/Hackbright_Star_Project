@@ -9,6 +9,12 @@
 
 <h3>e-mail:</h3> {{ user.email }}
 
-Saved Stars:
-
+{% if stars | length > 0 %}
+<h3>Saved Stars:</h3>
+<ul>    
+{% for key, value in stars.iteritems() %}
+    <li><a href="/stars/{{ key }}">{{ key }}</a> at {{ value }}</li>
+{% endfor %}
+</ul>
+{% endif %}
 {% endblock %}

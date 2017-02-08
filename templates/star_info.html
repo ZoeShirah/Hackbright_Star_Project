@@ -18,4 +18,11 @@
 
 <h3>Color Index:</h3>{{ star.color_index }}
 
+{% if 'user_id' in session %}
+<div id='saveStarInfo' class = "saveStar">
+    <h3>Add Star To Saved List: </h3>
+    <button id="addStar" value='{{ star.star_id }}'>add</button><div id='message'></div>
+</div>
+{% endif %}
+
 {% endblock %}

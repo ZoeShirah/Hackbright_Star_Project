@@ -4,7 +4,6 @@ from sqlalchemy import func
 from sqlalchemy.exc import DataError
 from model import Star, User, UserStars
 
-import datetime
 from model import connect_to_db, db
 from server import app
 
@@ -38,13 +37,12 @@ def load_stars():
                     magnitude=Mag,
                     color_index=ColorIndex)
 
-        # We need to add to the session or it won't ever be stored
+        # We need to add to the session and commit our work
         db.session.add(star)
 
     db.session.commit()
       
     f.close()
-    # Once we're done, we should commit our work
 
 
 # def set_val_user_id():

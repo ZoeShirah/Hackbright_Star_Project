@@ -95,7 +95,7 @@ def generator_form():
 
 @app.route("/register")
 def register_form():
-
+    """show the registration form"""
     if session.get('logged_in') is True:
         flash('user already signed in')
         return redirect('/')
@@ -105,6 +105,7 @@ def register_form():
 
 @app.route("/register", methods=["POST"])
 def register_process():
+    """Add the user to the database and log them in"""
 
     username = request.form.get('username')
     password = request.form.get('password')
@@ -133,6 +134,7 @@ def register_process():
 
 @app.route('/logout')
 def logout_process():
+    """logout the user by removing their info from the session"""
     if session.get('logged_in') is True:
         del session['user_id']
         del session['logged_in']
@@ -146,10 +148,37 @@ def logout_process():
 @app.route("/users/<user_id>")
 def show_user(user_id):
     """Show info about a user"""
-    user = User.query.filter_by(user_id=user_id).one()
-    return render_template("user_info.html",
-                           user=user)
 
+    user = User.query.filter_by(user_id=user_id).one()
+    userStars = UserStars.query.filter_by(user_id=user_id).all()
+
+    star_dict = {}
+    for userStar in userStars:
+        UStar = Star.query.filter_by(star_id=userStar.star_id).one()
+        star_dict[UStar.star_id] = (UStar.ra, UStar.dec)
+
+    return render_template("user_info.html",
+                           user=user,
+                           stars=star_dict)
+
+
+@app.route("/add_to_saved/<star_id>")
+def add_to_saved(star_id):
+    """Add a star to the user's list of saved stars"""
+
+    user_id = session.get('user_id')
+
+    try:
+        userStars = UserStars.query.filter_by(user_id=user_id).filter_by(star_id=star_id).one()
+        return "You have already saved this star!"
+    except sqlalchemy.orm.exc.NoResultFound:
+        userStars = UserStars(user_id=user_id,
+                              star_id=star_id)
+
+        # We need to add to the session and commit
+        db.session.add(userStars)
+        db.session.commit()
+    return "Succesfully added star"
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
