@@ -8,7 +8,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
 
-from model import Star, User, UserStars, connect_to_db, db
+from model import Star, User, UserStar, connect_to_db, db
 
 
 app = Flask(__name__)
@@ -80,7 +80,6 @@ def login_process():
 
     user_id = user.user_id
     session['user_id'] = user_id
-    session['logged_in'] = True
     print(session)
     flash("Logged In")
     return redirect("/users/" + str(user_id))
@@ -96,7 +95,7 @@ def generator_form():
 @app.route("/register")
 def register_form():
     """show the registration form"""
-    if session.get('logged_in') is True:
+    if 'user_id' in session:
         flash('user already signed in')
         return redirect('/')
     else:
@@ -126,7 +125,6 @@ def register_process():
         db.session.commit()
 
     session['user_id'] = user.user_id
-    session['logged_in'] = True
     print(session)
     flash("Logged In")
     return redirect("/")
@@ -135,9 +133,8 @@ def register_process():
 @app.route('/logout')
 def logout_process():
     """logout the user by removing their info from the session"""
-    if session.get('logged_in') is True:
+    if 'user_id' in session:
         del session['user_id']
-        del session['logged_in']
         flash('logged out')
     else:
         flash('not logged in')
@@ -150,12 +147,15 @@ def show_user(user_id):
     """Show info about a user"""
 
     user = User.query.filter_by(user_id=user_id).one()
-    userStars = UserStars.query.filter_by(user_id=user_id).all()
+    userStars = UserStar.query.filter_by(user_id=user_id).all()
 
     star_dict = {}
     for userStar in userStars:
         UStar = Star.query.filter_by(star_id=userStar.star_id).one()
-        star_dict[UStar.star_id] = (UStar.ra, UStar.dec)
+        star_dict[UStar.star_id] = {'ra': UStar.ra, 'dec': UStar.dec}
+        if UStar.name.strip():
+            star_name = UStar.name
+            star_dict[UStar.star_id].update({'name': star_name})
 
     return render_template("user_info.html",
                            user=user,
@@ -169,11 +169,11 @@ def add_to_saved(star_id):
     user_id = session.get('user_id')
 
     try:
-        userStars = UserStars.query.filter_by(user_id=user_id).filter_by(star_id=star_id).one()
+        userStars = UserStar.query.filter_by(user_id=user_id).filter_by(star_id=star_id).one()
         return "You have already saved this star!"
     except sqlalchemy.orm.exc.NoResultFound:
-        userStars = UserStars(user_id=user_id,
-                              star_id=star_id)
+        userStars = UserStar(user_id=user_id,
+                             star_id=star_id)
 
         # We need to add to the session and commit
         db.session.add(userStars)

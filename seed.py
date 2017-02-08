@@ -2,7 +2,7 @@
 
 from sqlalchemy import func
 from sqlalchemy.exc import DataError
-from model import Star, User, UserStars
+from model import Star, User, UserStar
 
 from model import connect_to_db, db
 from server import app

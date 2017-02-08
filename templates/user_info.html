@@ -13,7 +13,15 @@
 <h3>Saved Stars:</h3>
 <ul>    
 {% for key, value in stars.iteritems() %}
-    <li><a href="/stars/{{ key }}">{{ key }}</a> at {{ value }}</li>
+    <li>
+        <a href="/stars/{{ key }}">{{ key }}</a> 
+        {% if 'name' in value %}
+            {{ value['name'] }}
+        {% else %}
+            at ra: {{ '%.4f' | format(value['ra']) }} 
+            dec: {{ '%.4f' | format(value['dec']) }}
+        {% endif %}
+    </li>
 {% endfor %}
 </ul>
 {% endif %}

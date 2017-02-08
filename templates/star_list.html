@@ -3,6 +3,11 @@
 {% block content %}
 
     <h2>Stars</h2>
+    <form action="/stars">
+      Jump to star ids starting at:
+      <input type="integer" name="last" value={{ last }}>
+      <input type="submit" value="Next 1000 results">
+    </form>
     <ul>
       {% for star in stars %}
           <li>

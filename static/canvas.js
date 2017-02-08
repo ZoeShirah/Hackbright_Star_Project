@@ -10,3 +10,4 @@ context = my_canvas.getContext("2d");
    
  context.fillStyle = gradient;
  context.fillRect(0, 0, 400, 600);
+

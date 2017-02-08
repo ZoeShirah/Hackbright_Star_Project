@@ -36,12 +36,16 @@ class User(db.Model):
         return "<user_id = %d username = %s>" % (self.user_id, self.username)
 
 
-class UserStars(db.Model):
+class UserStar(db.Model):
     """Stars marked and saved by a user"""
+
+    __tablename__ = "user_stars"
 
     ustar_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     star_id = db.Column(db.Integer, db.ForeignKey('stars.star_id'))
+    user = db.relationship("User", backref='userstars')
+    star = db.relationship("Star", backref='userstars')
 
     def __repr__(self):
         return "user-star_id = %d user_id = %d star_id = %d" % (self.ustar_id, self.user_id, self.star_id)

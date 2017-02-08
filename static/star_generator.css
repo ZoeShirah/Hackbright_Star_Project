@@ -1,0 +1,16 @@
+#northDiv{
+    position: relative;
+    left: 0px; 
+    top: 0px;
+    z-index:-1;
+}
+
+
+#d3north{
+    position: absolute;
+    z-index: 2;
+    left: 0px; 
+    top: 0px;
+    z-index: 2;
+
+}
