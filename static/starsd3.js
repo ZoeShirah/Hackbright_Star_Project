@@ -20,8 +20,8 @@ function printStarData(starData) {
 var svgBodySelection = d3.select("#d3north");
 
 var svgContainer = svgBodySelection.append("svg")
-                                   .attr("width", 400)
-                                   .attr("height", 600)
+                                   .attr("width", 1260)
+                                   .attr("height", 630)
                                    .style("fill", "white");
 
 

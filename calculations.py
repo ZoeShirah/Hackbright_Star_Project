@@ -15,7 +15,18 @@ def get_current_altAz(ra, dec, lon=-122.4194155, lat=37.7749295):
 
 
 def visible_window(alt, az):
-    """Determine if a star is visible in one of the four windows, return the window"""
+    """Determine if a star is visible in one of the four windows, return the window
+
+    >>> visible_window(math.pi/4, math.pi/3)
+    {'direction': ['North', 'East']}
+
+    >>> visible_window(math.pi/4, math.pi/2)
+    {'direction': ['East']}
+
+    >>> visible_window(-math.pi/4, math.pi/3)
+    {'direction': 'not visible'}
+
+    """
 
     window = []
     if 0 <= alt <= math.pi/2:
@@ -28,24 +39,27 @@ def visible_window(alt, az):
         if math.pi < az < 2*math.pi:
             window.append("West")
     else:
-        return {"Not visible right now": None}
+        return {"direction": "not visible"}
     return {"direction": window}
 
 
-def convert_sky_to_northpixel(al, az):
-    pass
+def convert_sky_to_pixel(al, az):
+    """Take altitude and azimuth and convert to pixel coords.
 
+        pixel canvas size = 630px height(altitude) x 1260px width(azimuth)
 
-def convert_sky_to_eastpixel(al, az):
-    pass
+        Total azimuth range = pi, to convert from a given az to a px:
+        givenAz * maxPx/maxAz = givenAz * (1260/pi) = px
 
+        Total altitude range is pi/2, so
+        givenAl * maxPx/maxAl
+                    = givenAl *(630/(math.pi/2)) = givenAL *(1260/math.pi) = py
 
-def convert_sky_to_southhpixel(al, az):
-    pass
+    """
+    px = (1260/math.pi) * az
+    py = (1260/math.pi) * al
+    return (px, py)
 
-
-def convert_sky_to_westpixel(al, az):
-    pass
 
 #north = 0 degrees azimuth, view for north facing window is going to be
 #270 degrees to 90 degrees going clockwise (-90 to 90)  altitude is degrees
