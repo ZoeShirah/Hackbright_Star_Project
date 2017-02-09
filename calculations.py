@@ -3,15 +3,6 @@ import sidereal.sidereal
 from datetime import datetime
 import math
 
-# coords = sidereal.sidereal.RADec(2.5297431200, 89.2641380500)
-
-# h = coords.hourAngle(datetime.utcnow(), -122.4194155)
-
-# sky_coords = coords.altAz(h, 37.7749295)
-
-# print "sky coords of polaris", sky_coords
-
-
 def get_current_altAz(ra, dec, lon=-122.4194155, lat=37.7749295):
     """Get current altaz coords for a star at given ra and dec, default observer in SF
 
@@ -26,19 +17,19 @@ def get_current_altAz(ra, dec, lon=-122.4194155, lat=37.7749295):
 def visible_window(alt, az):
     """Determine if a star is visible in one of the four windows, return the window"""
 
-    window = ""
+    window = []
     if 0 <= alt <= math.pi/2:
-        if 3*math.pi/2 <= az or az <= math.pi/2:
-            window += "North"
-        if 0 <= az <= math.pi:
-            window += "East"
-        if math.pi/2 <= az <= 3*math.pi/2:
-            window += "South"
-        if math.pi <= az <= 2*math.pi:
-            window += "West"
+        if 3*math.pi/2 < az or az < math.pi/2:
+            window.append("North")
+        if 0 < az < math.pi:
+            window.append("East")
+        if math.pi/2 < az < 3*math.pi/2:
+            window.append("South")
+        if math.pi < az < 2*math.pi:
+            window.append("West")
     else:
-        return "Not visible right now"
-    return "window:", window
+        return {"Not visible right now": None}
+    return {"direction": window}
 
 
 def convert_sky_to_northpixel(al, az):
