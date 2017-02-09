@@ -1,7 +1,7 @@
 """helper functions to calculate star locations"""
 import sidereal.sidereal
 from datetime import datetime
-
+import math
 
 # coords = sidereal.sidereal.RADec(2.5297431200, 89.2641380500)
 
@@ -22,9 +22,23 @@ def get_current_altAz(ra, dec, lon=-122.4194155, lat=37.7749295):
     sky_coords = coords.altAz(h, lat)
     return sky_coords
 
-def visible_window(al, az):
-    """Determine if a star is visible in one of the four windows"""
-    pass
+
+def visible_window(alt, az):
+    """Determine if a star is visible in one of the four windows, return the window"""
+
+    window = ""
+    if 0 <= alt <= math.pi/2:
+        if 3*math.pi/2 <= az or az <= math.pi/2:
+            window += "North"
+        if 0 <= az <= math.pi:
+            window += "East"
+        if math.pi/2 <= az <= 3*math.pi/2:
+            window += "South"
+        if math.pi <= az <= 2*math.pi:
+            window += "West"
+    else:
+        return "Not visible right now"
+    return "window:", window
 
 
 def convert_sky_to_northpixel(al, az):
