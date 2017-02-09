@@ -1,4 +1,4 @@
-d3.json('/static/data.json', printStarData);
+d3.json('/star_data.json', printStarData);
 
 function printStarData(starData) {
   // d3 code
@@ -20,9 +20,9 @@ function printStarData(starData) {
 var svgBodySelection = d3.select("#d3north");
 
 var svgContainer = svgBodySelection.append("svg")
-                                 .attr("width", 400)
-                                .attr("height", 600)
-                                .style("fill", "white");
+                                   .attr("width", 400)
+                                   .attr("height", 600)
+                                   .style("fill", "white");
 
 
 // var circleSelection = svgSelection.append("circle")

@@ -2,7 +2,7 @@
 
 
 function replaceStar(result){
-    $('#message').html("Star Added");
+    $('#message').html("Star Added!");
 }
 
 function addStar(evt) {

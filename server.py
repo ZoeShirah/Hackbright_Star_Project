@@ -1,11 +1,10 @@
 """Stars"""
 
 from jinja2 import StrictUndefined
-
+import calculations
 from flask import Flask, jsonify, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-
-from flask_sqlalchemy import SQLAlchemy
+import json
 import sqlalchemy
 
 from model import Star, User, UserStar, connect_to_db, db
@@ -180,6 +179,15 @@ def add_to_saved(star_id):
         db.session.commit()
     return "Succesfully added star"
 
+
+@app.route('/star_data.json')
+def create_data():
+    """take the user input and return json file of stars"""
+    star_data = [{"x": 150, "y": 200, "magnitude": 3, "color_index": 0.498},
+                 {"x": 15, "y": 400, "magnitude": 1, "color_index": -0.98}]
+
+    return json.dumps(star_data)
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
@@ -193,5 +201,3 @@ if __name__ == "__main__":
     DebugToolbarExtension(app)
 
     app.run(port=5000, host='0.0.0.0')
-
-# SELECT name FROM stars WHERE name ~ '[A-Za-z]';

@@ -1,3 +1,8 @@
+#container{
+    position: relative;
+    z-index:-1;
+}
+
 #northDiv{
     position: relative;
     left: 0px; 
@@ -5,9 +10,8 @@
     z-index:-1;
 }
 
-
 #d3north{
     position: absolute;
     z-index: 2;
-    top: 115px;
+    top: 0px;
 }
