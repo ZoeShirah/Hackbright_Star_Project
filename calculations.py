@@ -1,30 +1,32 @@
 """helper functions to calculate star locations"""
-import sidereal.sidereal
+
+from sidereal import sidereal
 from datetime import datetime
 import math
+
 
 def get_current_altAz(ra, dec, lon=-122.4194155, lat=37.7749295):
     """Get current altaz coords for a star at given ra and dec, default observer in SF
 
     lat/long of SF = 37.7749295/-122.4194155
     """
-    coords = sidereal.sidereal.RADec(ra, dec)
+    coords = sidereal.RADec(ra, dec)
     h = coords.hourAngle(datetime.utcnow(), lon)
     sky_coords = coords.altAz(h, lat)
     return sky_coords
 
 
-def visible_window(alt, az):
+def get_visible_window(alt, az):
     """Determine if a star is visible in one of the four windows, return the window
 
     >>> visible_window(math.pi/4, math.pi/3)
-    {'direction': ['North', 'East']}
+    ['North', 'East']
 
     >>> visible_window(math.pi/4, math.pi/2)
-    {'direction': ['East']}
+    ['East']
 
     >>> visible_window(-math.pi/4, math.pi/3)
-    {'direction': 'not visible'}
+    []
 
     """
 
@@ -38,12 +40,10 @@ def visible_window(alt, az):
             window.append("South")
         if math.pi < az < 2*math.pi:
             window.append("West")
-    else:
-        return {"direction": "not visible"}
-    return {"direction": window}
+    return window
 
 
-def convert_sky_to_pixel(al, az):
+def convert_sky_to_pixel(alt, az):
     """Take altitude and azimuth and convert to pixel coords.
 
         pixel canvas size = 630px height(altitude) x 1260px width(azimuth)
@@ -52,13 +52,14 @@ def convert_sky_to_pixel(al, az):
         givenAz * maxPx/maxAz = givenAz * (1260/pi) = px
 
         Total altitude range is pi/2, so
-        givenAl * maxPx/maxAl
-                    = givenAl *(630/(math.pi/2)) = givenAL *(1260/math.pi) = py
+        givenAl * maxPx/maxAlt
+                   = givenAlt *(630/(math.pi/2)) = givenALt *(1260/math.pi) = py
 
     """
     px = (1260/math.pi) * az
-    py = (1260/math.pi) * al
-    return (px, py)
+    py = (1260/math.pi) * alt)
+    return {"x": px,
+            "y": py}
 
 
 #north = 0 degrees azimuth, view for north facing window is going to be
@@ -71,7 +72,5 @@ def convert_sky_to_pixel(al, az):
 #east window will be
 #west window will be
 
-#size of pixel image = 630h (altitude) 770w (azimuth)
+#size of pixel image = 630px height(altitude) x 1260px width(azimuth)
 #SF long/lat = -122.4194155/37.7749295
-
-#sky coords of polaris [az 348d 16' 25.097" alt -6d 07' 30.753"]

@@ -1,7 +1,7 @@
 """Stars"""
 
 from jinja2 import StrictUndefined
-import calculations
+import calculations as c
 from flask import Flask, jsonify, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 import json
@@ -181,10 +181,19 @@ def add_to_saved(star_id):
 
 
 @app.route('/star_data.json')
-def create_data():
+def create_stars_json():
     """take the user input and return json file of stars"""
-    star_data = [{"x": 150, "y": 200, "magnitude": 3, "color_index": 0.498},
-                 {"x": 15, "y": 400, "magnitude": 1, "color_index": -0.98}]
+
+    stars = Star.query.order_by(Star.star_id).all()
+    star_data = []
+    for star in stars:
+        altAz = c.get_current_altAz(float(star.ra), float(star.dec))
+        visible = c.get_visible_window(altAz.alt, altAz.az)
+        if "North" in visible:
+            star_info = c.convert_sky_to_pixel(altAz.alt, altAz.az)
+            star_info.update({'magnitude': float(star.magnitude),
+                              'color_index': float(star.color_index)})
+            star_data.append(star_info)
 
     return json.dumps(star_data)
 
