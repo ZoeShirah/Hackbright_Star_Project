@@ -1,4 +1,4 @@
-#container{
+#Ncontainer{
     position: relative;
     z-index:-1;
 }
@@ -15,3 +15,56 @@
     z-index: 2;
     top: 0px;
 }
+
+/*#Econtainer{
+    position: relative;
+    z-index:-1;
+}
+
+#eastDiv{
+    position: relative;
+    left: 0px; 
+    top: 0px;
+    z-index:-1;
+}
+
+#d3east{
+    position: absolute;
+    z-index: 2;
+    top: 0px;
+}
+#Scontainer{
+    position: relative;
+    z-index:-1;
+}
+
+#southDiv{
+    position: relative;
+    left: 0px; 
+    top: 0px;
+    z-index:-1;
+}
+
+#d3south{
+    position: absolute;
+    z-index: 2;
+    top: 0px;
+}
+
+#Wcontainer{
+    position: relative;
+    z-index:-1;
+}
+
+#westDiv{
+    position: relative;
+    left: 0px; 
+    top: 0px;
+    z-index:-1;
+}
+
+#d3west{
+    position: absolute;
+    z-index: 2;
+    top: 0px;
+}*/

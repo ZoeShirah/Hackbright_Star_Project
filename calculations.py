@@ -3,12 +3,15 @@
 from sidereal import sidereal
 from datetime import datetime
 import math
+from decimal import Decimal
 
+def convert_degrees_to_radians(decimaldegree):
+    return decimaldegree*Decimal(math.pi/180)
 
-def get_current_altAz(ra, dec, lon=-122.4194155, lat=37.7749295):
+def get_current_altAz(ra, dec, lon=-2.1366218688, lat=0.65929689448):
     """Get current altaz coords for a star at given ra and dec, default observer in SF
 
-    lat/long of SF = 37.7749295/-122.4194155
+    lat/long of SF = 37.7749295/-122.4194155 degrees = 0.65929689448/-2.1366218688
     """
     coords = sidereal.RADec(ra, dec)
     h = coords.hourAngle(datetime.utcnow(), lon)
@@ -18,6 +21,9 @@ def get_current_altAz(ra, dec, lon=-122.4194155, lat=37.7749295):
 
 def get_visible_window(alt, az):
     """Determine if a star is visible in one of the four windows, return the window
+
+    a star is visible in a window if it is in within pi/3 radians of the center 
+    point of the direction, where north = 0, east = pi/2, south = pi, west = 3pi/2 
 
     >>> visible_window(math.pi/4, math.pi/3)
     ['North', 'East']
@@ -32,32 +38,49 @@ def get_visible_window(alt, az):
 
     window = []
     if 0 <= alt <= math.pi/2:
-        if 3*math.pi/2 < az or az < math.pi/2:
+        if 5*math.pi/3 < az or az < math.pi/3:
             window.append("North")
-        if 0 < az < math.pi:
+        if math.pi/6 < az < 5*math.pi/6:
             window.append("East")
-        if math.pi/2 < az < 3*math.pi/2:
+        if 2*math.pi/3 < az < 4*math.pi/3:
             window.append("South")
-        if math.pi < az < 2*math.pi:
+        if 7*math.pi/6 < az < 11*math.pi/6:
             window.append("West")
     return window
 
 
-def convert_sky_to_pixel(alt, az):
+def convert_sky_to_pixel(alt, az, direction):
     """Take altitude and azimuth and convert to pixel coords.
 
-        pixel canvas size = 630px height(altitude) x 1260px width(azimuth)
+        pixel canvas size = 600px height(altitude) x 800px width(azimuth)
 
         Total azimuth range = pi, to convert from a given az to a px:
-        givenAz * maxPx/maxAz = givenAz * (1260/pi) = px
+        givenAz * maxPx/maxAz = givenAz * (800/pi) = px
 
         Total altitude range is pi/2, so
         givenAl * maxPx/maxAlt
-                   = givenAlt *(630/(math.pi/2)) = givenALt *(1260/math.pi) = py
+                   = givenAlt *(600/(math.pi/2)) = givenALt *(1200/math.pi) = py
 
     """
-    px = (1260/math.pi) * az
-    py = (1260/math.pi) * alt)
+    if direction == "East":
+        az = az - (math.pi/6)
+    if direction == "South":
+        az = az - (2*math.pi/3)
+    if direction == "West":
+        az = az - (7*math.pi/6)
+    if direction == "North":
+        if az >= 5*math.pi/3:
+            az = az - (5*math.pi/3)
+        if az <= math.pi/3:
+            az = az + math.pi/3
+
+
+    px = az*(800.0/(2*math.pi/3))
+    py = 600.0 - ((1200.0/math.pi) * alt)
+
+
+    #py = 600 - (1/math.sqrt(2))*math.tan(alt - (math.pi/4))*(1200/math.pi)
+
     return {"x": px,
             "y": py}
 

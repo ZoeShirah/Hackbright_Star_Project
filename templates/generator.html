@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
-{% block title %}Homepage{% endblock %}
+{% block title %}Sky{% endblock %}
 <link rel="stylesheet" href='/static/star_generator.css'>
 {% block content %}
 <h2>Night Generator</h2>
-<div id="container">
+<div id="Ncontainer">
     <div id='northDiv'>
-        <canvas id="myCanvas" width="1260" height="630">
+        <canvas id="myCanvasN" width="800" height="600">
             Your browser doesn't support HTML 5 Canvas</canvas>
     </div>
 
@@ -14,6 +14,40 @@
         <script src='/static/starsd3.js'></script>
     </div>
 </div>
+<!-- <div id="Econtainer">
+    <div id='eastDiv'>
+        <canvas id="myCanvasE" width="800" height="600">
+            Your browser doesn't support HTML 5 Canvas</canvas>
+    </div>
+
+    <div id=d3east>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src='/static/starsd3.js'></script>
+    </div>
+</div>
+<div id="Scontainer">
+    <div id='southDiv'>
+        <canvas id="myCanvasS" width="800" height="600">
+            Your browser doesn't support HTML 5 Canvas</canvas>
+    </div>
+
+    <div id=d3south>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src='/static/starsd3.js'></script>
+    </div>
+</div>
+<div id="Wcontainer">
+    <div id='westDiv'>
+        <canvas id="myCanvasW" width="800" height="600">
+            Your browser doesn't support HTML 5 Canvas</canvas>
+    </div>
+
+    <div id=d3west>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src='/static/starsd3.js'></script>
+    </div>
+</div> -->
+
     <link rel="stylesheet" href='/static/star_generator.css'>
     <script src='/static/canvas.js'></script>
 {% endblock %}

@@ -13,17 +13,39 @@ function printStarData(starData) {
     var starAttributes = stars
                         .attr('cx', function(d) {return d.x})
                         .attr('cy', function(d) {return d.y})
-                        .attr('r', function(d) {return 0.5})
-                        // .attr('r', function(d) {return 6-d.magnitude})
+                        //.attr('r', function(d) {return 0.5})
+                        .attr('r', function(d) {return 5-d.magnitude})
 }
 
 
 var svgBodySelection = d3.select("#d3north");
 
 var svgContainer = svgBodySelection.append("svg")
-                                   .attr("width", 1260)
-                                   .attr("height", 630)
+                                   .attr("width", 800)
+                                   .attr("height", 600)
                                    .style("fill", "white");
+
+// var svgBodySelection = d3.select("#d3east");
+
+// var svgContainer = svgBodySelection.append("svg")
+//                                    .attr("width", 800)
+//                                    .attr("height", 600)
+//                                    .style("fill", "white");
+
+// var svgBodySelection = d3.select("#d3south");
+
+// var svgContainer = svgBodySelection.append("svg")
+//                                    .attr("width", 800)
+//                                    .attr("height", 600)
+//                                    .style("fill", "white");
+
+// var svgBodySelection = d3.select("#d3west");
+
+// var svgContainer = svgBodySelection.append("svg")
+//                                    .attr("width", 800)
+//                                    .attr("height", 600)
+//                                    .style("fill", "white");
+
 
 
 // var circleSelection = svgSelection.append("circle")
