@@ -13,3 +13,4 @@ function addStar(evt) {
 }
 
 $('#addStar').on('click', addStar);
+

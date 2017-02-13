@@ -10,21 +10,3 @@ context = my_canvasN.getContext("2d");
    
  context.fillStyle = gradient;
  context.fillRect(0, 0, 1260, 630);
-
-// var my_canvasE = document.getElementById("myCanvasE");
-// context = my_canvasE.getContext("2d");
-   
-//  context.fillStyle = gradient;
-//  context.fillRect(0, 0, 1260, 630);
-
-// var my_canvasS = document.getElementById("myCanvasS");
-// context = my_canvasS.getContext("2d");
-   
-//  context.fillStyle = gradient;
-//  context.fillRect(0, 0, 1260, 630);
-
-// var my_canvasW = document.getElementById("myCanvasW");
-// context = my_canvasW.getContext("2d");
-   
-//  context.fillStyle = gradient;
-//  context.fillRect(0, 0, 1260, 630);

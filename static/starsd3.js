@@ -1,4 +1,15 @@
-d3.json('/star_data.json', printStarData);
+
+function getDirection(){
+
+    var direction = d3.event.target.value;
+    console.log("value" + direction)
+
+    var url = "/star_data.json/" + direction;
+    console.log(url)
+    d3.json(url, printStarData)    
+}
+
+d3.select("#directionValues").on("change", getDirection);
 
 function printStarData(starData) {
   // d3 code
@@ -25,34 +36,6 @@ var svgContainer = svgBodySelection.append("svg")
                                    .attr("height", 600)
                                    .style("fill", "white");
 
-// var svgBodySelection = d3.select("#d3east");
-
-// var svgContainer = svgBodySelection.append("svg")
-//                                    .attr("width", 800)
-//                                    .attr("height", 600)
-//                                    .style("fill", "white");
-
-// var svgBodySelection = d3.select("#d3south");
-
-// var svgContainer = svgBodySelection.append("svg")
-//                                    .attr("width", 800)
-//                                    .attr("height", 600)
-//                                    .style("fill", "white");
-
-// var svgBodySelection = d3.select("#d3west");
-
-// var svgContainer = svgBodySelection.append("svg")
-//                                    .attr("width", 800)
-//                                    .attr("height", 600)
-//                                    .style("fill", "white");
-
-
-
-// var circleSelection = svgSelection.append("circle")
-//                                   .attr("cx", 25)
-//                                   .attr("cy", 25)
-//                                   .attr("r", 25)
-//                                   .style("fill", "purple");
 
 console.log('hiya!');
 

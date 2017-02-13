@@ -3,6 +3,14 @@
 <link rel="stylesheet" href='/static/star_generator.css'>
 {% block content %}
 <h2>Night Generator</h2>
+<form id="direction">
+    <select id="directionValues">
+        <option value="North">North</option>
+        <option value="East">East</option>
+        <option value="South">South</option>
+        <option value="West">West</option>
+    </select>
+</form>
 <div id="Ncontainer">
     <div id='northDiv'>
         <canvas id="myCanvasN" width="800" height="600">
@@ -14,39 +22,6 @@
         <script src='/static/starsd3.js'></script>
     </div>
 </div>
-<!-- <div id="Econtainer">
-    <div id='eastDiv'>
-        <canvas id="myCanvasE" width="800" height="600">
-            Your browser doesn't support HTML 5 Canvas</canvas>
-    </div>
-
-    <div id=d3east>
-        <script src="https://d3js.org/d3.v4.min.js"></script>
-        <script src='/static/starsd3.js'></script>
-    </div>
-</div>
-<div id="Scontainer">
-    <div id='southDiv'>
-        <canvas id="myCanvasS" width="800" height="600">
-            Your browser doesn't support HTML 5 Canvas</canvas>
-    </div>
-
-    <div id=d3south>
-        <script src="https://d3js.org/d3.v4.min.js"></script>
-        <script src='/static/starsd3.js'></script>
-    </div>
-</div>
-<div id="Wcontainer">
-    <div id='westDiv'>
-        <canvas id="myCanvasW" width="800" height="600">
-            Your browser doesn't support HTML 5 Canvas</canvas>
-    </div>
-
-    <div id=d3west>
-        <script src="https://d3js.org/d3.v4.min.js"></script>
-        <script src='/static/starsd3.js'></script>
-    </div>
-</div> -->
 
     <link rel="stylesheet" href='/static/star_generator.css'>
     <script src='/static/canvas.js'></script>
