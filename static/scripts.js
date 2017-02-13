@@ -14,3 +14,4 @@ function addStar(evt) {
 
 $('#addStar').on('click', addStar);
 
+document.getElementById("directionValues").selectedIndex = -1;

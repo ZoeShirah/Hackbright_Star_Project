@@ -184,7 +184,7 @@ def add_to_saved(star_id):
 def create_stars_json(direction):
     """take the user input and return json file of stars"""
 
-    stars = Star.query.order_by(Star.star_id).all()
+    stars = Star.query.filter(Star.magnitude < 5).order_by(Star.star_id).all()
     star_data = []
     for star in stars:
         ra = star.ra

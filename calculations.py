@@ -55,7 +55,7 @@ def convert_sky_to_pixel(alt, az, direction):
         pixel canvas size = 600px height(altitude) x 800px width(azimuth)
 
         Total azimuth range = 2pi/3, to convert from a given az to a px:
-        givenAz * maxPx/maxAz = givenAz * (800/(2pi/3) 
+        givenAz * maxPx/maxAz = givenAz * (800/(2pi/3)
                                 = givenAz *(1200/math.pi)
 
         Total altitude range is pi/2, so
@@ -71,8 +71,9 @@ def convert_sky_to_pixel(alt, az, direction):
         az = az - (7*math.pi/6)
     if direction == "North":
         if az >= 5*math.pi/3:
+            print az
             az = az - (5*math.pi/3)
-        if az <= math.pi/3:
+        elif az <= math.pi/3:
             az = az + math.pi/3
 
     px = az*(1200.0/math.pi)

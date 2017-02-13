@@ -1407,7 +1407,7 @@ class RADec:
     def __init__ ( self, ra, dec ):
         """Constructor for RADec.
         """
-        self.ra  =  ra #% TWO_PI
+        self.ra  =  ra % TWO_PI
         self.dec  =  dec
 # - - -   R A D e c . h o u r A n g l e
 
