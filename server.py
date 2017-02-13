@@ -174,7 +174,7 @@ def add_to_saved(star_id):
         userStars = UserStar(user_id=user_id,
                              star_id=star_id)
 
-        # We need to add to the session and commit
+        # add to the session and commit
         db.session.add(userStars)
         db.session.commit()
     return "Succesfully added star"
@@ -182,15 +182,16 @@ def add_to_saved(star_id):
 
 @app.route('/star_data.json/<direction>')
 def create_stars_json(direction):
-    """take the user input and return json file of stars"""
+    """Take the user input and return json file of stars
+
+    """
 
     stars = Star.query.filter(Star.magnitude < 5).order_by(Star.star_id).all()
     star_data = []
     for star in stars:
-        ra = star.ra
-        dec = star.dec
-        # ra = c.convert_degrees_to_radians(star.ra)
-        # dec = c.convert_degrees_to_radians(star.dec)
+        #ra is in hours/min/sec, 1 hour = 15 degrees, so must multiply by 15
+        ra = c.convert_degrees_to_radians((15*star.ra)) 
+        dec = c.convert_degrees_to_radians(star.dec)
         altAz = c.get_current_altAz(float(ra), float(dec))
         visible = c.get_visible_window(altAz.alt, altAz.az)
         if direction in visible:

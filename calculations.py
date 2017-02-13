@@ -71,7 +71,6 @@ def convert_sky_to_pixel(alt, az, direction):
         az = az - (7*math.pi/6)
     if direction == "North":
         if az >= 5*math.pi/3:
-            print az
             az = az - (5*math.pi/3)
         elif az <= math.pi/3:
             az = az + math.pi/3

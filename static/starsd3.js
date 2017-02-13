@@ -30,7 +30,7 @@ function printStarData(starData) {
     var starAttributes = stars
                         .attr('cx', function(d) {return d.x})
                         .attr('cy', function(d) {return d.y})
-                        //.attr('r', function(d) {return 0.5})
+                        // .attr('r', function(d) {return 0.5})
                         .attr('r', function(d) {return 5-d.magnitude})
 }
 
