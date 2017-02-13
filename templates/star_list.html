@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}User List{% endblock %}
+{% block nav_stars %}active{% endblock %}
 {% block content %}
 
     <h2>Stars</h2>
@@ -13,6 +14,9 @@
           <li>
               <a href="/stars/{{ star.star_id }}">
                 {{ star.star_id }} ({{ star.ra }}, {{ star.dec }})
+                {% if (star.name | default("False", true) != "False") %}
+                  - {{ star.name }}
+                {% endif %}
               </a>
           </li>
       {% endfor %}

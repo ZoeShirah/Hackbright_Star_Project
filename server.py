@@ -44,7 +44,10 @@ def star_list(last=0):
 @app.route("/stars/<star_id>")
 def show_star(star_id):
     """Show info about a star"""
-    star = Star.query.filter_by(star_id=star_id).one()
+    try:
+        star = Star.query.filter_by(star_id=star_id).one()
+    except sqlalchemy.orm.exc.NoResultFound:
+        star = None
     return render_template("star_info.html",
                            star=star)
 
@@ -201,6 +204,30 @@ def create_stars_json(direction):
             star_data.append(star_info)
 
     return json.dumps(star_data)
+
+
+@app.route('/search')
+def search():
+    """Search for a star by name or star id"""
+
+    term = request.args.get("name")
+    try:
+        search_id = term[:8]
+        search_star = int(search_id)
+    except ValueError:
+        search_star = term
+
+    if type(search_star) == int:
+        return redirect("/stars/" + term[:8])
+    else:
+        search_star = search_star.lower().capitalize()
+        try:
+            star = Star.query.filter_by(name=search_star).one()
+            return redirect("/stars/" + str(star.star_id))
+        except sqlalchemy.orm.exc.NoResultFound:
+            flash("no star with that name in this database")
+            return redirect("/stars")
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

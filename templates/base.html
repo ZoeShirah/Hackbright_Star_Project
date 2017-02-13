@@ -11,22 +11,55 @@
     </ul>
   {% endif %}
   {% endwith %}
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery.js"></script>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand glyphicon glyphicon-star" style='color: blue' aria-hidden="true" href="/generator"></a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="{% block nav_homepage %}{% endblock %}"><a href="/">Homepage<span class="sr-only">(current)</span></a></li>
+        <li class="{% block nav_stars %}{% endblock %}"><a href="/stars">Stars</a></li>
+        {% if 'user_id' in session %}
+          <li class="{% block nav_profile %}{% endblock %}"><a href="/users/{{ session.get('user_id') }}">Your Profile</a></li>
+          <li><a href="/logout">Log Out</a></li>
+        {% else %}
+          <li class="{% block nav_login %}{% endblock %}"><a href="/login">Log In</a></li>
+          <li class="{% block nav_register %}{% endblock %}"><a href="/register">Register</a></li>
+        {% endif %}
+      </ul>
+      <form class="navbar-form navbar-left" action='/search'>
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search stars by name or id" name='name'>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
  <link rel="stylesheet" href='/static/styles.css'>
 </head>
 
-<a href="/"><button type=button>homepage</button></a>
-{% if 'user_id' in session %}
-  <a href="/logout"><button type=button>log out</button></a>
-  <a href="/users/{{ session.get('user_id') }}">
-    <button type=button>Your Profile</button></a>
-{% else %}
-  <a href="/login"><button type=button>log in</button></a>
-  <a href="/register"><button type=button>register</button></a>
-{% endif %}
-<br><br>
-
+<body>
 {% block content %}CONTENT HERE{% endblock %}
-
 <script src="http://code.jquery.com/jquery.js"></script>
 <script src='/static/scripts.js'></script>
 </body>

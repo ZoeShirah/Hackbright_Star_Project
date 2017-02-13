@@ -1,4 +1,5 @@
 #Ncontainer{
+    margin-left: 100px;
     position: relative;
     z-index:-1;
 }
@@ -14,4 +15,12 @@
     position: absolute;
     z-index: 2;
     top: 0px;
+}
+
+p{
+    margin-left:100px;
+}
+
+#direction{
+    margin-left: 50px;
 }
