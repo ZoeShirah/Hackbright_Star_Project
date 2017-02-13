@@ -187,10 +187,10 @@ def create_stars_json(direction):
     stars = Star.query.order_by(Star.star_id).all()
     star_data = []
     for star in stars:
-        # ra = star.ra
-        # dec = star.dec
-        ra = c.convert_degrees_to_radians(star.ra)
-        dec = c.convert_degrees_to_radians(star.dec)
+        ra = star.ra
+        dec = star.dec
+        # ra = c.convert_degrees_to_radians(star.ra)
+        # dec = c.convert_degrees_to_radians(star.dec)
         altAz = c.get_current_altAz(float(ra), float(dec))
         visible = c.get_visible_window(altAz.alt, altAz.az)
         if direction in visible:

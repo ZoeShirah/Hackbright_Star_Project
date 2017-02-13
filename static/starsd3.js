@@ -15,6 +15,12 @@ function printStarData(starData) {
   // d3 code
   console.log(starData);
 
+  if (d3.select('#d3north').empty()){
+    console.log("empty");
+  } else{
+    d3.selectAll('circle').remove();
+  }
+
     var stars = svgContainer.selectAll("circle")
                             .data(starData)
                             .enter()
