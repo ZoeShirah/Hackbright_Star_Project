@@ -11,11 +11,11 @@
     {% if (star.name | default("False", true) != "False") %}
         <h3>Proper Name:</h3> {{ star.name}}
     {% endif %}
-    <h3>Right Ascension:</h3> {{ star.ra }}
+    <h3>Right Ascension:</h3> {{ star.ra }} hrs
 
-    <h3>Declination:</h3> {{ star.dec }}
+    <h3>Declination:</h3> {{ star.dec }}&deg;
 
-    <h3>Distance from Earth:</h3> {{ star.distance }}
+    <h3>Distance from Earth:</h3> {{ star.distance }} pc
 
     <h3>Magnitude:</h3> {{ star.magnitude }}
 

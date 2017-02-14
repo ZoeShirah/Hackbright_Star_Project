@@ -13,10 +13,9 @@ from model import Star, User, UserStar, connect_to_db, db
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
-app.secret_key = "ABC123"
+app.secret_key = "Polaris8222"
 
-# Normally, if you use an undefined variable in Jinja2, it fails
-# silently. This is horrible. Fix this so that, instead, it raises an
+# So that if you use an undefined variable in Jinja2, it raises an
 # error.
 app.jinja_env.undefined = StrictUndefined
 
@@ -199,8 +198,9 @@ def create_stars_json(direction):
         visible = c.get_visible_window(altAz.alt, altAz.az)
         if direction in visible:
             star_info = c.convert_sky_to_pixel(altAz.alt, altAz.az, direction)
+            color = c.get_color(float(star.color_index))
             star_info.update({'magnitude': float(star.magnitude),
-                              'color_index': float(star.color_index)})
+                              'color': color})
             star_data.append(star_info)
 
     return json.dumps(star_data)

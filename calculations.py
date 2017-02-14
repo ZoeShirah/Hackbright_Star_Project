@@ -82,6 +82,21 @@ def convert_sky_to_pixel(alt, az, direction):
             "y": py}
 
 
+def get_color(colorIndex):
+    if colorIndex <= 0.15:  # blue is about -0.33 to 0.15
+        color = "#e8f0ff"
+    elif colorIndex < 0.6:  # white from 0.15 to 0.6
+        color = "white"
+    elif colorIndex < 1.15:  # yellow 0.6 to 1.15
+        color = "#fffbd1"
+    elif colorIndex < 1.64:  # orange 1.15 to 1.64
+        color = "#f9e7ca"
+    elif colorIndex >= 1.64:  # red = greater than 1.64
+        color = "#ffc6c6"
+
+    return color
+
+
 #north = 0 degrees azimuth, view for north facing window is going to be
 #270 degrees to 90 degrees going clockwise (-90 to 90)  altitude is degrees
 #above the horizon (0 to 90)

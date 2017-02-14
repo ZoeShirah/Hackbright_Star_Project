@@ -2,10 +2,7 @@
 function getDirection(){
 
     var direction = d3.event.target.value;
-    console.log("value" + direction)
-
     var url = "/star_data.json/" + direction;
-    console.log(url)
     d3.json(url, printStarData)    
 }
 
@@ -13,7 +10,6 @@ d3.select("#directionValues").on("change", getDirection);
 
 function printStarData(starData) {
   // d3 code
-  console.log(starData);
 
   if (d3.select('#d3north').empty()){
     console.log("empty");
@@ -30,8 +26,8 @@ function printStarData(starData) {
     var starAttributes = stars
                         .attr('cx', function(d) {return d.x})
                         .attr('cy', function(d) {return d.y})
-                        // .attr('r', function(d) {return 0.5})
                         .attr('r', function(d) {return 5-d.magnitude})
+                        .attr("fill", function(d) {return d.color});
 }
 
 
