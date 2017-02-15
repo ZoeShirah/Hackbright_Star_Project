@@ -12,14 +12,14 @@
     </select>
 </form>
 <br>
-<div id="Ncontainer" width="1260px">
-    <div id='d3north'>
+<div id="container" >
+    <div id='d3north' >
     </div>
 </div>
 <br>
-<p>Note: only stars with a magnitude less than 5 are shown</p>
+<p class="indented">Note: only stars with a magnitude less than 5 are shown</p>
 <br>
-<form id="otherParams">
+<form class="indented" id="otherParams">
     Latitude:
     <input type="number" name="latitiude">&emsp;  
     Longitude:
@@ -28,7 +28,6 @@
     <input type="number" name="time">&emsp;
 </form>
 <br>
-<script src='/static/canvas.js'></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src='/static/starsd3.js'></script>
 {% endblock %}

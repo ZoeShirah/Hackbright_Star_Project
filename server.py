@@ -205,6 +205,9 @@ def create_stars_json(direction):
             star_info.update({'magnitude': float(star.magnitude),
                               'color': color,
                               'id': star.star_id})
+            if star.name:
+                star_info.update({'name': star.name})
+
             star_data.append(star_info)
 
     return json.dumps(star_data)

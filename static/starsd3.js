@@ -10,6 +10,7 @@ d3.select("#directionValues").on("change", getDirection);
 function printStarData(starData) {
   // d3 code
 
+
   if (d3.select('#d3north').empty()){
     console.log("empty");
   } else{
@@ -20,17 +21,25 @@ function printStarData(starData) {
                             .data(starData)
                             .enter()
                             .append('circle');
-      console.log(stars);
+      console.log(starData);
 
     var starAttributes = stars
                         .attr('cx', function(d) {return d.x})
                         .attr('cy', function(d) {return d.y})
                         .attr('r', function(d) {return 5-d.magnitude})
                         .attr("fill", function(d) {return d.color})
-                        .on('click', function() {console.log('yo');});
-
-    $('circle').on('click', function() {console.log('yo')})
-
+                        .on('click', function(d) {
+                                    console.log('id '+ d.id);})
+                        .on('mouseover', function(d){
+                                    tooltip.text("starID: "+d.id)
+                                      if (d.hasOwnProperty("name")){
+                                          tooltip.text(d.name);};
+                                    return tooltip.style("visibility", "visible");
+                                    })
+                        .on("mousemove", function(){
+                                    return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+                        .on("mouseout", function(){
+                                    return tooltip.style("visibility", "hidden");});
 }
 
 
@@ -40,6 +49,15 @@ var svgContainer = svgBodySelection.append("svg")
                                    .attr("width", 800)
                                    .attr("height", 600)
                                    .style("fill", "white");
+
+var tooltip = d3.select("#d3north")
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .style("background", "#90F5BC")
+    .style("font-weight", "bold")
+    .text("a simple tooltip");
 
 
 console.log('hiya!');
