@@ -1,4 +1,3 @@
-
 function getDirection(){
 
     var direction = d3.event.target.value;
@@ -21,13 +20,17 @@ function printStarData(starData) {
                             .data(starData)
                             .enter()
                             .append('circle');
-
+      console.log(stars);
 
     var starAttributes = stars
                         .attr('cx', function(d) {return d.x})
                         .attr('cy', function(d) {return d.y})
                         .attr('r', function(d) {return 5-d.magnitude})
-                        .attr("fill", function(d) {return d.color});
+                        .attr("fill", function(d) {return d.color})
+                        .on('click', function() {console.log('yo');});
+
+    $('circle').on('click', function() {console.log('yo')})
+
 }
 
 

@@ -15,8 +15,7 @@ app = Flask(__name__)
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "Polaris8222"
 
-# So that if you use an undefined variable in Jinja2, it raises an
-# error.
+# So that if you use an undefined variable in Jinja2, it raises an error.
 app.jinja_env.undefined = StrictUndefined
 
 
@@ -187,12 +186,16 @@ def create_stars_json(direction):
     """Take the user input and return json file of stars
 
     """
-
+    if request.args.get("longitude"):
+        lon = request.args.get("longitude")
+        print "longitude", lon
+    # lat = request.args.get("latitude")
+    # time = request.args.get("time")
     stars = Star.query.filter(Star.magnitude < 5).order_by(Star.star_id).all()
     star_data = []
     for star in stars:
         #ra is in hours/min/sec, 1 hour = 15 degrees, so must multiply by 15
-        ra = c.convert_degrees_to_radians((15*star.ra)) 
+        ra = c.convert_degrees_to_radians((15*star.ra))
         dec = c.convert_degrees_to_radians(star.dec)
         altAz = c.get_current_altAz(float(ra), float(dec))
         visible = c.get_visible_window(altAz.alt, altAz.az)
@@ -200,7 +203,8 @@ def create_stars_json(direction):
             star_info = c.convert_sky_to_pixel(altAz.alt, altAz.az, direction)
             color = c.get_color(float(star.color_index))
             star_info.update({'magnitude': float(star.magnitude),
-                              'color': color})
+                              'color': color,
+                              'id': star.star_id})
             star_data.append(star_info)
 
     return json.dumps(star_data)

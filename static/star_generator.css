@@ -1,26 +1,30 @@
-#Ncontainer{
+#Ncontainer {
     margin-left: 100px;
     position: relative;
-    z-index:-1;
 }
 
-#northDiv{
+/*#northDiv{
     position: relative;
     left: 0px; 
     top: 0px;
     z-index:-1;
-}
+}*/
 
-#d3north{
-    position: absolute;
-    z-index: 2;
-    top: 0px;
+#d3north {
+    background: linear-gradient( 0deg, #488AC7, #0000A0, #000080);
+    margin: auto;
+    width: 800px;
+    height: 600px;
 }
 
 p{
     margin-left:100px;
 }
 
-#direction{
+#direction {
     margin-left: 50px;
 }
+/*
+#Ncontainer, #northDiv, #d3north, circle{
+    pointer-events: all;
+}*/

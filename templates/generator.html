@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Sky{% endblock %}
-<link rel="stylesheet" href='/static/star_generator.css'>
 {% block content %}
-<h2>Night Generator</h2>
+<h2>Star View</h2>
 <form id="direction">
     Select a direction:
     <select id="directionValues">
@@ -13,21 +12,23 @@
     </select>
 </form>
 <br>
-<div id="Ncontainer">
-    <div id='northDiv'>
-        <canvas id="myCanvasN" width="800" height="600">
-            Your browser doesn't support HTML 5 Canvas</canvas>
-    </div>
-
-    <div id=d3north>
-        <script src="https://d3js.org/d3.v4.min.js"></script>
-        <script src='/static/starsd3.js'></script>
+<div id="Ncontainer" width="1260px">
+    <div id='d3north'>
     </div>
 </div>
-
-    <link rel="stylesheet" href='/static/star_generator.css'>
-    <script src='/static/canvas.js'></script>
 <br>
 <p>Note: only stars with a magnitude less than 5 are shown</p>
-<br><br>
+<br>
+<form id="otherParams">
+    Latitude:
+    <input type="number" name="latitiude">&emsp;  
+    Longitude:
+    <input type="number" name="latitiude">&emsp;
+    Time:
+    <input type="number" name="time">&emsp;
+</form>
+<br>
+<script src='/static/canvas.js'></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src='/static/starsd3.js'></script>
 {% endblock %}

@@ -5,16 +5,21 @@ from datetime import datetime
 import math
 from decimal import Decimal
 
+
 def convert_degrees_to_radians(decimaldegree):
     return Decimal(decimaldegree)*Decimal(math.pi/180)
 
-def get_current_altAz(ra, dec, lon=-2.1366218688, lat=0.65929689448):
-    """Get current altaz coords for a star at given ra and dec, default observer in SF
 
-    lat/long of SF = 37.7749295/-122.4194155 degrees = 0.65929689448/-2.1366218688
+def get_current_altAz(ra, dec, lon=-2.1366218688, lat=0.65929689448, time=datetime.utcnow()):
+    """Get current altaz coords for a star at given ra, dec, lat, long, datetime
+
+    default observer in SF at now, rad/dec and lat/long must be in radians, 
+    time must be a UTC time as a datetime object
+    lat/long of SF = 37.7749295/-122.4194155 degrees
+                   = 0.65929689448/-2.1366218688 radians
     """
     coords = sidereal.RADec(ra, dec)
-    h = coords.hourAngle(datetime.utcnow(), lon)
+    h = coords.hourAngle(time, lon)
     sky_coords = coords.altAz(h, lat)
     return sky_coords
 
@@ -90,7 +95,7 @@ def get_color(colorIndex):
     elif colorIndex < 1.15:  # yellow 0.6 to 1.15
         color = "#fffbd1"
     elif colorIndex < 1.64:  # orange 1.15 to 1.64
-        color = "#f9e7ca"
+        color = "#ffd9b3"
     elif colorIndex >= 1.64:  # red = greater than 1.64
         color = "#ffc6c6"
 
