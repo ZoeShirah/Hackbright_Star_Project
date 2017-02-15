@@ -37,7 +37,7 @@ function printStarData(starData) {
                                     return tooltip.style("visibility", "visible");
                                     })
                         .on("mousemove", function(){
-                                    return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+                                    return tooltip.style("top", (d3.event.pageY-200)+"px").style("left",(d3.event.pageX-100)+"px");})
                         .on("mouseout", function(){
                                     return tooltip.style("visibility", "hidden");});
 }
@@ -52,13 +52,12 @@ var svgContainer = svgBodySelection.append("svg")
 
 var tooltip = d3.select("#d3north")
     .append("div")
+    .attr("class", "d3tooltip")
     .style("position", "absolute")
     .style("z-index", "10")
     .style("visibility", "hidden")
-    .style("background", "#90F5BC")
     .style("font-weight", "bold")
     .text("a simple tooltip");
-
 
 console.log('hiya!');
 
