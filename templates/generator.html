@@ -11,23 +11,33 @@
         <option value="West">West</option>
     </select>
 </form>
-<br>
-<div id="container" >
-    <div id='d3north' >
-    </div>
+<div class="indented">
+    <div id='d3starfield'></div>
 </div>
-<br>
 <p class="indented">Note: only stars with a magnitude less than 5 are shown</p>
-<br>
-<form class="indented" id="otherParams">
-    Latitude:
-    <input type="number" name="latitiude">&emsp;  
-    Longitude:
-    <input type="number" name="latitiude">&emsp;
-    Time:
-    <input type="number" name="time">&emsp;
+<p class="indented">{% if "lat" in session %}
+    Latitude: {{ '%.10f' | format(session['lat']) }} radians&emsp;
+{% endif %}
+{% if "lon" in session %}
+    Longitude: {{ '%.10f' | format(session['lon']) }} radians&emsp;
+{% endif %}
+{% if "time" in session %}
+    Time: {{ session["time"] }}
+{% else %}
+    DateTime: now
+{% endif %}
+</p>
+<form action="/change_defaults" class="indented" id="otherParams">
+    <label for="latitude">Latitude*:</label>&emsp;
+    <input type="number" step="any" name="latitude" placeholder="degrees as a decimal">
+    <label for="longitude">Longitude*:</label>&emsp;
+    <input type="number" step="any" name="longitude" placeholder="degrees as a decimal"><br>
+    <label for="date">Date/Time:</label>
+    <input type="datetime-local" step="any" name="date">
+    <input type="submit" value="Submit/Reset">
 </form>
-<br>
+* for South latitude or West longitude enter a negative value: 
+64.9090S = -64.9090, 72.0567W = -72.0567, 
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src='/static/starsd3.js'></script>
 {% endblock %}

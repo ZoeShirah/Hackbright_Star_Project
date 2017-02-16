@@ -1,3 +1,5 @@
+"use strict";
+
 $('.user-info').on('submit', function(evt) {
 
     var userChars = $('#e-mail').val();

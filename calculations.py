@@ -13,8 +13,9 @@ def convert_degrees_to_radians(decimaldegree):
 def get_current_altAz(ra, dec, lon=-2.1366218688, lat=0.65929689448, time=datetime.utcnow()):
     """Get current altaz coords for a star at given ra, dec, lat, long, datetime
 
-    default observer in SF at now, rad/dec and lat/long must be in radians, 
-    time must be a UTC time as a datetime object
+    default observer in SF at now.
+    Rad/dec and lat/long must be in radians, time must be UTC time as a datetime object
+
     lat/long of SF = 37.7749295/-122.4194155 degrees
                    = 0.65929689448/-2.1366218688 radians
     """

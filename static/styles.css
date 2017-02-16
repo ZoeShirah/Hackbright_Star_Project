@@ -5,3 +5,31 @@ body{
 .navbar-default{
     margin-left: -20px;
 }
+
+#d3starfield {
+    background: linear-gradient( 0deg, #488AC7, #0000A0, #000080);
+    width: 800px;
+    height: 600px;
+}
+
+.indented {
+    margin-left:100px;
+    margin-bottom: 20px;
+}
+
+#direction {
+    margin-left: 50px;
+    margin-bottom: 20px;
+}
+
+.d3tooltip {
+    border-radius: 2px;
+    line-height: 1;
+    padding: 5px;
+    color: black;
+    border-color: #90F5BC;
+    border-width: 2px;
+    background: white;
+    border-style: solid;
+    font-weight: bold;
+}

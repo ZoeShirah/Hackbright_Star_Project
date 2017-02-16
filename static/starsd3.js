@@ -1,3 +1,5 @@
+"use strict";
+
 function getDirection(){
 
     var direction = d3.event.target.value;
@@ -11,7 +13,7 @@ function printStarData(starData) {
   // d3 code
 
 
-  if (d3.select('#d3north').empty()){
+  if (d3.select('#d3starfield').empty()){
     console.log("empty");
   } else{
     d3.selectAll('circle').remove();
@@ -29,34 +31,36 @@ function printStarData(starData) {
                         .attr('r', function(d) {return 5-d.magnitude})
                         .attr("fill", function(d) {return d.color})
                         .on('click', function(d) {
-                                    console.log('id '+ d.id);})
+                          console.log('id '+ d.id);})
                         .on('mouseover', function(d){
-                                    tooltip.text("starID: "+d.id)
-                                      if (d.hasOwnProperty("name")){
-                                          tooltip.text(d.name);};
-                                    return tooltip.style("visibility", "visible");
-                                    })
+                          tooltip.text("starID: "+d.id)
+                            if (d.hasOwnProperty("name")){
+                              tooltip.text(d.name);};
+                          return tooltip.style("visibility", "visible");
+                          })
                         .on("mousemove", function(){
-                                    return tooltip.style("top", (d3.event.pageY-200)+"px").style("left",(d3.event.pageX-100)+"px");})
+                          return tooltip.style("top", (d3.event.pageY-50)+"px")
+                                        .style("left",(d3.event.pageX+25)+"px");
+                          })
                         .on("mouseout", function(){
-                                    return tooltip.style("visibility", "hidden");});
+                          return tooltip.style("visibility", "hidden");
+                          });
 }
 
 
-var svgBodySelection = d3.select("#d3north");
+var svgBodySelection = d3.select("#d3starfield");
 
 var svgContainer = svgBodySelection.append("svg")
                                    .attr("width", 800)
                                    .attr("height", 600)
                                    .style("fill", "white");
 
-var tooltip = d3.select("#d3north")
+var tooltip = d3.select("#d3starfield")
     .append("div")
     .attr("class", "d3tooltip")
     .style("position", "absolute")
     .style("z-index", "10")
     .style("visibility", "hidden")
-    .style("font-weight", "bold")
     .text("a simple tooltip");
 
 console.log('hiya!');

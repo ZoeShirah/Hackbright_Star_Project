@@ -6,6 +6,8 @@ from flask import Flask, jsonify, render_template, redirect, request, flash, ses
 from flask_debugtoolbar import DebugToolbarExtension
 import json
 import sqlalchemy
+from datetime import datetime
+import pytz
 
 from model import Star, User, UserStar, connect_to_db, db
 
@@ -183,32 +185,9 @@ def add_to_saved(star_id):
 
 @app.route('/star_data.json/<direction>')
 def create_stars_json(direction):
-    """Take the user input and return json file of stars
+    """ Take the user selected direction and return json file of stars."""
 
-    """
-    if request.args.get("longitude"):
-        lon = request.args.get("longitude")
-        print "longitude", lon
-    # lat = request.args.get("latitude")
-    # time = request.args.get("time")
-    stars = Star.query.filter(Star.magnitude < 5).order_by(Star.star_id).all()
-    star_data = []
-    for star in stars:
-        #ra is in hours/min/sec, 1 hour = 15 degrees, so must multiply by 15
-        ra = c.convert_degrees_to_radians((15*star.ra))
-        dec = c.convert_degrees_to_radians(star.dec)
-        altAz = c.get_current_altAz(float(ra), float(dec))
-        visible = c.get_visible_window(altAz.alt, altAz.az)
-        if direction in visible:
-            star_info = c.convert_sky_to_pixel(altAz.alt, altAz.az, direction)
-            color = c.get_color(float(star.color_index))
-            star_info.update({'magnitude': float(star.magnitude),
-                              'color': color,
-                              'id': star.star_id})
-            if star.name:
-                star_info.update({'name': star.name})
-
-            star_data.append(star_info)
+    star_data = create_list_of_stars(direction)
 
     return json.dumps(star_data)
 
@@ -234,6 +213,60 @@ def search():
         except sqlalchemy.orm.exc.NoResultFound:
             flash("no star with that name in this database")
             return redirect("/stars")
+
+
+@app.route('/change_defaults')
+def change_defaults():
+    """ Take user input for lat/long and time and redraw sky"""
+    lat = request.args.get("latitude")
+    lon = request.args.get("longitude")
+    date = request.args.get("date")
+
+    date = str(date)
+    datetime_object = datetime.strptime(date, '%Y-%m-%dT%H:%M')
+
+    if lat:
+        lat = c.convert_degrees_to_radians(lat)
+        session["lat"] = lat
+    else:
+        if "lat" in session:
+            del session["lat"]
+    if lon:
+        lon = c.convert_degrees_to_radians(lon)
+        session["lon"] = lon
+    else:
+        if "lon" in session:
+            del session["lon"]
+
+    return redirect('/generator')
+
+# *****************************************************************
+# Helper functions
+
+
+def create_list_of_stars(direction):
+    stars = Star.query.filter(Star.magnitude < 5).order_by(Star.star_id).all()
+    star_data = []
+    for star in stars:
+        #ra is in hours/min/sec, 1 hour = 15 degrees, so must multiply by 15
+        ra = c.convert_degrees_to_radians((15*star.ra))
+        dec = c.convert_degrees_to_radians(star.dec)
+        la = float(session.get("lat", 0.65929689448))
+        lo = float(session.get("lon", -2.1366218688))
+        t = session.get("time", datetime.utcnow())
+        altAz = c.get_current_altAz(float(ra), float(dec), lo, la, t)
+        visible = c.get_visible_window(altAz.alt, altAz.az)
+        if direction in visible:
+            star_info = c.convert_sky_to_pixel(altAz.alt, altAz.az, direction)
+            color = c.get_color(float(star.color_index))
+            star_info.update({'magnitude': float(star.magnitude),
+                              'color': color,
+                              'id': star.star_id})
+            if star.name:
+                star_info.update({'name': star.name})
+
+            star_data.append(star_info)
+    return star_data
 
 
 if __name__ == "__main__":
