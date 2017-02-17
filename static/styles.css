@@ -20,6 +20,7 @@ body{
 #direction {
     margin-left: 50px;
     margin-bottom: 20px;
+    display: inline-block;
 }
 
 .d3tooltip {
@@ -32,4 +33,9 @@ body{
     background: white;
     border-style: solid;
     font-weight: bold;
+}
+
+#constellation {
+    margin-right: 500px;
+    display: inline-block;
 }

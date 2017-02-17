@@ -2,6 +2,7 @@
 
 from jinja2 import StrictUndefined
 import calculations as c
+from helpers import create_list_of_stars
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 import json
@@ -25,12 +26,14 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
+
     return render_template("homepage.html")
 
 
 @app.route("/stars")
 def star_list(last=0):
     """Show list of stars, 1000 at a time (there are 87,353 stars)"""
+
     try:
         last = int(request.args.get("last"))-1
     except TypeError:
@@ -45,6 +48,7 @@ def star_list(last=0):
 @app.route("/stars/<star_id>")
 def show_star(star_id):
     """Show info about a star"""
+
     try:
         star = Star.query.filter_by(star_id=star_id).one()
     except sqlalchemy.orm.exc.NoResultFound:
@@ -56,6 +60,7 @@ def show_star(star_id):
 @app.route("/login")
 def login_form():
     """Show user log in form"""
+
     if session.get('logged_in') is True:
         flash('user already signed in')
         return redirect('/')
@@ -66,6 +71,7 @@ def login_form():
 @app.route("/login", methods=["POST"])
 def login_process():
     """Process Log-in, checking password"""
+
     username = request.form.get('username')
     password = request.form.get('password')
 
@@ -92,12 +98,14 @@ def login_process():
 @app.route("/generator")
 def generator_form():
     """Show generated map and form"""
+
     return render_template("generator.html")
 
 
 @app.route("/register")
 def register_form():
     """show the registration form"""
+
     if 'user_id' in session:
         flash('user already signed in')
         return redirect('/')
@@ -136,6 +144,7 @@ def register_process():
 @app.route('/logout')
 def logout_process():
     """logout the user by removing their info from the session"""
+
     if 'user_id' in session:
         del session['user_id']
         flash('logged out')
@@ -219,6 +228,7 @@ def search():
 @app.route('/change_defaults')
 def change_defaults():
     """ Take user input for lat/long and time and redraw sky"""
+
     lat = request.args.get("latitude")
     lon = request.args.get("longitude")
     date = request.args.get("date")
@@ -250,33 +260,6 @@ def change_defaults():
             del session["time"]
 
     return redirect('/generator')
-
-# *****************************************************************
-# Helper functions
-
-
-def create_list_of_stars(direction):
-    stars = Star.query.filter(Star.magnitude < 5).order_by(Star.star_id).all()
-    star_data = []
-    for star in stars:
-        #ra is in hours/min/sec, 1 hour = 15 degrees, so must multiply by 15
-        ra = c.convert_degrees_to_radians((15*star.ra))
-        dec = c.convert_degrees_to_radians(star.dec)
-        la = float(session.get("lat", 0.65929689448))
-        lo = float(session.get("lon", -2.1366218688))
-        t = session.get("time", datetime.utcnow())
-        altAz = c.get_current_altAz(float(ra), float(dec), lo, la, t)
-        visible = c.get_visible_window(altAz.alt, altAz.az)
-        if direction in visible:
-            star_info = c.convert_sky_to_pixel(altAz.alt, altAz.az, direction)
-            color = c.get_color(float(star.color_index))
-            star_info.update({'magnitude': float(star.magnitude),
-                              'color': color,
-                              'id': star.star_id})
-            if star.name:
-                star_info.update({'name': star.name})
-            star_data.append(star_info)
-    return star_data
 
 
 if __name__ == "__main__":
