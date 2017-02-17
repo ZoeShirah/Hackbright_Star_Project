@@ -2,12 +2,13 @@
 
 from jinja2 import StrictUndefined
 import calculations as c
-from flask import Flask, jsonify, render_template, redirect, request, flash, session
+from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 import json
 import sqlalchemy
 from datetime import datetime
 import pytz
+from tzwhere import tzwhere
 
 from model import Star, User, UserStar, connect_to_db, db
 
@@ -222,21 +223,31 @@ def change_defaults():
     lon = request.args.get("longitude")
     date = request.args.get("date")
 
-    date = str(date)
-    datetime_object = datetime.strptime(date, '%Y-%m-%dT%H:%M')
-
     if lat:
-        lat = c.convert_degrees_to_radians(lat)
-        session["lat"] = lat
+        latit = c.convert_degrees_to_radians(lat)
+        session["lat"] = latit
     else:
-        if "lat" in session:
-            del session["lat"]
+        lat = 37.7749295
+        session["lat"] = 0.65929689448
     if lon:
-        lon = c.convert_degrees_to_radians(lon)
-        session["lon"] = lon
+        longi = c.convert_degrees_to_radians(lon)
+        session["lon"] = longi
     else:
-        if "lon" in session:
-            del session["lon"]
+        lon = -122.4194155
+        session["lon"] = -2.1366218688
+
+    if date:
+        date = str(date)
+
+        dt_object = datetime.strptime(date, '%Y-%m-%dT%H:%M')
+        zone = tzwhere.tzwhere().tzNameAt(float(lat), float(lon))
+        local_tz = pytz.timezone(zone)
+        dttz_object = local_tz.localize(dt_object, is_dst=None)
+        dt_utc = dttz_object.astimezone(pytz.utc)
+        session["time"] = dt_utc
+    else:
+        if "time" in session:
+            del session["time"]
 
     return redirect('/generator')
 
@@ -264,7 +275,6 @@ def create_list_of_stars(direction):
                               'id': star.star_id})
             if star.name:
                 star_info.update({'name': star.name})
-
             star_data.append(star_info)
     return star_data
 

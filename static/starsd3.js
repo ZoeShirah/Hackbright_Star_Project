@@ -23,7 +23,6 @@ function printStarData(starData) {
                             .data(starData)
                             .enter()
                             .append('circle');
-      console.log(starData);
 
     var starAttributes = stars
                         .attr('cx', function(d) {return d.x})
@@ -33,7 +32,7 @@ function printStarData(starData) {
                         .on('click', function(d) {
                           console.log('id '+ d.id);})
                         .on('mouseover', function(d){
-                          tooltip.text("starID: "+d.id)
+                          tooltip.text("starID: "+d.id);
                             if (d.hasOwnProperty("name")){
                               tooltip.text(d.name);};
                           return tooltip.style("visibility", "visible");

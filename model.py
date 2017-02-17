@@ -48,7 +48,36 @@ class UserStar(db.Model):
     star = db.relationship("Star", backref='userstars')
 
     def __repr__(self):
-        return "user-star_id = %d user_id = %d star_id = %d" % (self.ustar_id, self.user_id, self.star_id)
+        return "<user-star_id = %d user_id = %d star_id = %d>" % (self.ustar_id, self.user_id, self.star_id)
+
+
+class Constellation(db.Model):
+    """Constellations"""
+
+    __tablename__ = "constellations"
+
+    const_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(40), unique=True, nullable=False)
+    number_of_stars = db.Column(db.Integer)
+
+    def __repr__(self):
+        return "<constellation const_id = %d name= %s>" % (self.const_id, self.name)
+
+
+class Const_Line(db.Model):
+    """Constellation Lines"""
+
+    __tablename__ = "const_lines"
+
+    line_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    startpoint = db.Column(db.Integer, db.ForeignKey('stars.star_id'), nullable=False)
+    endpoint = db.Column(db.Integer, db.ForeignKey('stars.star_id'), nullable=False)
+    const = db.Column(db.Integer, db.ForeignKey('constellations.const_id'), nullable=False)
+    # star = db.relationship("Star", backref='constlines')
+    constellation = db.relationship("Constellation", backref='constlines')
+
+    def __repr__(self):
+        return "<line line_id = %d start= %d end= %d>" % (self.line_id, self.start, self.end)
 
 
 def connect_to_db(app):

@@ -14,7 +14,7 @@
 <div class="indented">
     <div id='d3starfield'></div>
 </div>
-<p class="indented">Note: only stars with a magnitude less than 5 are shown</p>
+<p class="indented">Note: Default lat/long is for Hackbright, San Francisco, CA.  Default time is now</p>
 <p class="indented">{% if "lat" in session %}
     Latitude: {{ '%.10f' | format(session['lat']) }} radians&emsp;
 {% endif %}
@@ -22,7 +22,7 @@
     Longitude: {{ '%.10f' | format(session['lon']) }} radians&emsp;
 {% endif %}
 {% if "time" in session %}
-    Time: {{ session["time"] }}
+    DateTime in UTC: {{ session["time"] }}
 {% else %}
     DateTime: now
 {% endif %}
