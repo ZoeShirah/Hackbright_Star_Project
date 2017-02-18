@@ -1,5 +1,14 @@
 "use strict";
 
+function getConstellations(){
+
+  var direction = d3.select('#directionValues').node().value
+  var url = "/constellation_data.json/"+direction;
+  d3.json(url, constellate)
+}
+
+d3.select("#constellations").on("click", getConstellations);
+
 function getDirection(){
 
     var direction = d3.event.target.value;
@@ -9,14 +18,22 @@ function getDirection(){
 
 d3.select("#directionValues").on("change", getDirection);
 
+d3.select("#clear").on("click", function (){
+  if (d3.select('#d3starfield').empty()){
+    console.log("empty");
+  } else{
+    d3.selectAll('path').remove();
+  }
+});
+
 function printStarData(starData) {
   // d3 code
-
 
   if (d3.select('#d3starfield').empty()){
     console.log("empty");
   } else{
     d3.selectAll('circle').remove();
+    d3.selectAll('path').remove();
   }
 
     var stars = svgContainer.selectAll("circle")
@@ -47,6 +64,26 @@ function printStarData(starData) {
 }
 
 
+function constellate(constellation_data){
+
+  for (var x = 0;x < constellation_data.length; x++){
+    var data = constellation_data[x];
+    var lineList = data.lines;
+    for (var i=0; i<lineList.length; i++){
+      var lineData = lineList[i];
+      var lineFunction = d3.line()
+                              .x(function(d) { return d.x; })
+                              .y(function(d) { return d.y; });
+
+      var lineGraph = svgContainer.append("path")
+                              .attr("d", lineFunction(lineData))
+                              .attr("stroke", "yellow")
+                              .attr("stroke-width", 1)
+                              .attr("fill", "none");
+    }
+  }
+}
+
 var svgBodySelection = d3.select("#d3starfield");
 
 var svgContainer = svgBodySelection.append("svg")
@@ -63,4 +100,3 @@ var tooltip = d3.select("#d3starfield")
     .text("a simple tooltip");
 
 console.log('hiya!');
-

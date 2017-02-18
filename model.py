@@ -77,7 +77,7 @@ class Const_Line(db.Model):
     constellation = db.relationship("Constellation", backref='constlines')
 
     def __repr__(self):
-        return "<line line_id = %d start= %d end= %d>" % (self.line_id, self.start, self.end)
+        return "<line line_id = %d start= %d end= %d>" % (self.line_id, self.startpoint, self.endpoint)
 
 
 def connect_to_db(app):

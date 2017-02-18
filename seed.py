@@ -12,12 +12,10 @@ def load_stars():
     """Load stars from hygfull.csv into database."""
 
     print "Stars"
-
     # Delete all rows in table, so if we need to run this a second time,
-    # we won't be trying to add duplicate users
+    # we won't be trying to add duplicates
     Star.query.delete()
-
-    # Read u.user file and insert data
+    
     f = open("seed_data/hygfull.csv")
     next(f)  # skip first row
     for row in f:

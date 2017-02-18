@@ -2,7 +2,7 @@
 
 from jinja2 import StrictUndefined
 import calculations as c
-from helpers import create_list_of_stars
+from helpers import create_list_of_stars, create_list_of_constellations
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 import json
@@ -15,10 +15,8 @@ from model import Star, User, UserStar, connect_to_db, db
 
 
 app = Flask(__name__)
-
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "Polaris8222"
-
 # So that if you use an undefined variable in Jinja2, it raises an error.
 app.jinja_env.undefined = StrictUndefined
 
@@ -200,6 +198,16 @@ def create_stars_json(direction):
     star_data = create_list_of_stars(direction)
 
     return json.dumps(star_data)
+
+
+@app.route('/constellation_data.json/<direction>')
+def create_constellation_json(direction):
+    """ Take the user selected direction and returns constellations."""
+
+    star_data = create_list_of_stars(direction)
+    constellation_data = create_list_of_constellations(star_data, direction)
+
+    return json.dumps(constellation_data)
 
 
 @app.route('/search')
