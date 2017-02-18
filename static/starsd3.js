@@ -65,9 +65,10 @@ function printStarData(starData) {
 
 
 function constellate(constellation_data){
-
+  var visible = [];
   for (var x = 0;x < constellation_data.length; x++){
     var data = constellation_data[x];
+    visible.push(data.name);
     var lineList = data.lines;
     for (var i=0; i<lineList.length; i++){
       var lineData = lineList[i];
@@ -82,6 +83,9 @@ function constellate(constellation_data){
                               .attr("fill", "none");
     }
   }
+  console.log('array of visible '+ visible);
+  d3.select('#v_const').append("text")
+                       .text(visible)
 }
 
 var svgBodySelection = d3.select("#d3starfield");

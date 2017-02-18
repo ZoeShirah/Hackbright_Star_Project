@@ -60,6 +60,7 @@ def load_constellations():
     next(f)
     next(f)  # skip first two rows
     points = []
+    count = 0
     for row in f:
         row = row.rstrip()
         constname, starname, ra, dec, mag = row.split(",")
@@ -80,35 +81,24 @@ def load_constellations():
             db.session.add(constellation)
             db.session.flush()
             print "added constellation"
-
         try:
-            star = Star.query.filter(func.abs(Star.ra - ra) < 0.05, func.abs(Star.dec - dec) < 0.05, func.abs(Star.magnitude - mag) < 0.05).one()
+            star = Star.query.filter(func.abs(Star.ra - ra) < 0.01, func.abs(Star.dec - dec) < 0.01, func.abs(Star.magnitude - mag) < 0.4).one()
             points.append(star.star_id)
             print "points + 1", points
             if len(points) == 2:
                 const = Constellation.query.filter(Constellation.name == constname).one()
                 const_line = Const_Line(startpoint=points.pop(0),
-                                        endpoint=points.pop(0),
+                                        endpoint=points[0],
                                         const=const.const_id)
                 db.session.add(const_line)
                 print "added line"
         except (NoResultFound, MultipleResultsFound):
+            count = count + 1
+            print "******No/Multiple*********", count
             continue
 
     db.session.commit()
     f.close()
-
-# def set_val_user_id():
-#     """Set value for the next user_id after seeding database"""
-
-#     # Get the Max user_id in the database
-#     result = db.session.query(func.max(User.user_id)).one()
-#     max_id = int(result[0])
-
-#     # Set the value for the next user_id to be max_id + 1
-#     query = "SELECT setval('users_user_id_seq', :new_id)"
-#     db.session.execute(query, {'new_id': max_id + 1})
-#     db.session.commit()
 
 
 if __name__ == "__main__":
