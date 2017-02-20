@@ -2,6 +2,7 @@ import calculations as c
 from flask import session
 from model import Star, Const_Line, Constellation
 from datetime import datetime
+from sqlalchemy import or_
 
 
 def get_altaz(star):
@@ -38,7 +39,13 @@ def create_list_of_stars(direction):
                               'id': star.star_id})
             if star.name:
                 star_info.update({'name': star.name})
-
+            consts = Const_Line.query.filter(or_(Const_Line.startpoint == star.star_id, Const_Line.endpoint == star.star_id)).all()
+            if consts:
+                const_set = set()
+                for const in consts:
+                    name = const.constellation.name
+                    const_set.add(name)
+                star_info.update({'constellations': list(const_set)})
             star_data.append(star_info)
 
     return star_data

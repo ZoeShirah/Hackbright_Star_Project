@@ -23,6 +23,7 @@ d3.select("#clear").on("click", function (){
     console.log("empty");
   } else{
     d3.selectAll('path').remove();
+    d3.select('#v_const').selectAll('text').remove()
   }
 });
 
@@ -54,6 +55,8 @@ function printStarData(starData) {
                           tooltip.text("starID: "+d.id);
                             if (d.hasOwnProperty("name")){
                               tooltip.text(d.name);};
+                            if (d.hasOwnProperty("constellations")){
+                                tooltip.append("text").text("\n" + d.constellations);};
                           return tooltip.style("visibility", "visible");
                           })
                         .on("mousemove", function(){
@@ -85,7 +88,7 @@ function constellate(constellation_data){
                               .attr("fill", "none");
     }
   }
-  console.log('array of visible '+ visible);
+
   d3.select('#v_const').append("text")
                        .text(visible.join(', '))
 }
