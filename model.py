@@ -31,6 +31,8 @@ class User(db.Model):
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(40))
+    lat = db.Column(db.Numeric(14, 10))
+    lon = db.Column(db.Numeric(14, 10))
 
     def __repr__(self):
         return "<user_id = %d username = %s>" % (self.user_id, self.username)

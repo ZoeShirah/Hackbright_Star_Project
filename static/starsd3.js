@@ -34,6 +34,8 @@ function printStarData(starData) {
   } else{
     d3.selectAll('circle').remove();
     d3.selectAll('path').remove();
+    d3.select('#v_const').selectAll('text').remove()
+
   }
 
     var stars = svgContainer.selectAll("circle")
@@ -85,7 +87,7 @@ function constellate(constellation_data){
   }
   console.log('array of visible '+ visible);
   d3.select('#v_const').append("text")
-                       .text(visible)
+                       .text(visible.join(', '))
 }
 
 var svgBodySelection = d3.select("#d3starfield");

@@ -62,6 +62,45 @@ def convert_line_to_pixel(const_line, direction):
     return [start_xy, end_xy]
 
 
+def replace_constellation_name(name):
+    abbr = name
+
+    conversion = {'ORI': 'Orion', 'GEM': 'Gemini', 'CNC': 'Cancer',
+                  'CMI': 'Canis Minor', 'CMA': 'Canis Major', 'MON': 'Monoceros',
+                  'LEP': 'Lepus', 'SEX': 'Sextans', 'PYX': 'Pyxis',
+                  'TRI': 'Triangulum', 'ARI': 'Aries', 'LEO': 'Leo',
+                  'LMI': 'Leo Minor', 'LYN': 'Lynx', 'VIR': 'Virgo',
+                  'VEL': 'Vela', 'CEN': 'Centaurus', 'CRT': 'Crater',
+                  'ANT': 'Antlia', 'HYA': 'Hydra', 'PUP': 'Puppis',
+                  'COL': 'Columba', 'CAR': 'Carina', 'CAS': 'Cassiopeia',
+                  'PIC': 'Pictor', 'DOR': 'Dorado', 'AND': 'Andromeda',
+                  'TAU': 'Taurus', 'AUR': 'Auriga', 'HOR': 'Horologium',
+                  'CAE': 'Caelum', 'SCL': 'Sculptor', 'CET': 'Cetus',
+                  'FOR': 'Fornax', 'PHE': 'Phoenix', 'CAM': 'Camelopardelis',
+                  'ERI': 'Eridanus', 'PEG': 'Pegasus', 'PER': 'Persius',
+                  'PSC': 'Pisces', 'UMA': 'Ursa Major', 'UMI': 'Ursa Minor',
+                  'CEP': 'Cepheus', 'CHA': 'Chamaeleon', 'CIR': 'Circinus',
+                  'COM': 'Coma Berenices', 'CRA': 'Corona Austrina', 'CRB': 'Corona Borealis',
+                  'CRU': 'Crux', 'CRV': 'Corvus', 'CVN': 'Canes Venatici',
+                  'CYG': 'Cygnus', 'DEL': 'Delphinus', 'DRA': 'Draco',
+                  'EQU': 'Equuleus', 'GRU': 'Grus', 'HER': 'Hercules',
+                  'HYI': 'Hydrus', 'IND': 'Indus', 'LAC': 'Lacerta',
+                  'LIB': 'Libra', 'LUP': 'Lupus', 'LYR': 'Lyra',
+                  'MEN': 'Mensa', 'MIC': 'Microscopium', 'MUS': 'Musca',
+                  'NOR': 'Norma', 'OCT': 'Octans', 'OPH': 'Ophiuchus',
+                  'PAV': 'Pavo', 'PSA': 'Piscis Austinus', 'RET': 'Reticulum',
+                  'SCO': 'Scorpio', 'SCT': 'Scutum', 'SER': 'Serpens',
+                  'SGE': 'Sagitta', 'SGR': 'Sagittarius', 'APS': 'Apus',
+                  'AQL': 'Aquila', 'AQR': 'Aquarius', 'ARA': 'Ara',
+                  'VOL': 'Volans', 'VUL': 'Vulpecula', 'BOO': 'Bootes',
+                  'CAP': 'Capricornus', 'TUC': 'Tucana', 'TRA': 'Triangulum Australe',
+                  'TEL': 'Telescopium'}
+
+    fullname = conversion[abbr]
+
+    return fullname
+
+
 def create_list_of_constellations(star_list, direction):
     """create a list of dictionaries containing info about visible constellations"""
 
@@ -92,8 +131,9 @@ def create_list_of_constellations(star_list, direction):
                 line = convert_line_to_pixel(line, direction)
                 lines.append(line)
 
+        name = replace_constellation_name(const.name)
         constellation = {"id": const_id,
-                         "name": const.name,
+                         "name": name,
                          "lines": lines}
         constellations.append(constellation)
 
