@@ -1,5 +1,6 @@
 """Stars"""
 
+import os
 from jinja2 import StrictUndefined
 import calculations as c
 from helpers import create_list_of_stars, create_list_of_constellations
@@ -10,7 +11,6 @@ import sqlalchemy
 from datetime import datetime
 import pytz
 from tzwhere import tzwhere
-
 from model import Star, User, UserStar, connect_to_db, db
 
 
@@ -97,7 +97,9 @@ def login_process():
 def generator_form():
     """Show generated map and form"""
 
-    return render_template("generator.html")
+    secret = os.environ['GOOGLE_API_KEY']
+
+    return render_template("generator.html", secret=secret)
 
 
 @app.route("/register")
@@ -237,8 +239,8 @@ def search():
 def change_defaults():
     """ Take user input for lat/long and time and redraw sky"""
 
-    lat = request.args.get("latitude")
-    lon = request.args.get("longitude")
+    lat = request.args.get("lat")
+    lon = request.args.get("lng")
     date = request.args.get("date")
 
     if lat:
