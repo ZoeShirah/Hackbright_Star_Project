@@ -5,9 +5,9 @@ document.getElementById("directionValues").selectedIndex = -1;
 
 function getConstellations(){
 
-  var direction = d3.select('#directionValues').node().value
+  var direction = d3.select('#directionValues').node().value;
   var url = "/constellation_data.json/"+direction;
-  d3.json(url, constellate)
+  d3.json(url, constellate);
 }
 
 d3.select("#constellations").on("click", getConstellations);
@@ -16,10 +16,46 @@ function getDirection(){
 
     var direction = d3.event.target.value;
     var url = "/star_data.json/" + direction;
-    d3.json(url, printStarData)    
+    d3.json(url, printStarData);   
 }
 
 d3.select("#directionValues").on("change", getDirection);
+
+function changeDirectionRight(){
+    var direction = d3.select('#directionValues').node().value;
+    if (direction === 'North'){
+      direction = 'East';
+    } else if (direction === 'East'){
+      direction = 'South';
+    } else if (direction === 'South'){
+      direction = 'West';
+    }  else if (direction === 'West'){
+      direction = 'North';}
+
+    d3.select('#directionValues').property('value', direction);
+    var url = "/star_data.json/" + direction;
+    d3.json(url, printStarData);
+}
+
+function changeDirectionLeft(){
+    var direction = d3.select('#directionValues').node().value;
+    if (direction === 'North'){
+      direction = 'West';
+    } else if (direction === 'West'){
+      direction = 'South';
+    } else if (direction === 'South'){
+      direction = 'East';
+    }  else if (direction === 'East'){
+      direction = 'North';}
+
+    d3.select('#directionValues').property('value', direction);
+    var url = "/star_data.json/" + direction;
+    d3.json(url, printStarData);
+}
+
+d3.select(".rarrow").on("click", changeDirectionRight);
+
+d3.select(".larrow").on("click", changeDirectionLeft);
 
 d3.select("#clear").on("click", function (){
   if (d3.select('#d3starfield').empty()){
