@@ -14,12 +14,3 @@ function addStar(evt) {
 
 $('#addStar').on('click', addStar);
 
-document.getElementById("directionValues").selectedIndex = -1;
-
-//from jquery geocomplete plug in 
-$(function(){
-        $("#geocomplete").geocomplete({
-          details: "form",
-          types: ["geocode", "establishment"],
-        });
-      });

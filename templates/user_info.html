@@ -8,6 +8,21 @@
 <h3>username:</h3> {{ user.username }}
 
 <h3>e-mail:</h3> {{ user.email }}
+{% if (user.lat | default("False", true) != "False") %}
+<h3>your location:</h3> {{ user.lat }}, {{ user.lon }}
+{% endif%}
+<br><br>
+<h4>Set Your Latitude and Longitude:</h4>
+<form action="/set_user_location" class="latlng">
+    Enter a location: &emsp; <input id="geocomp" type="text" placeholder="Type in an address" value="Hackbright Academy" />
+      <fieldset>
+        <label for="lat">Latitude:</label>&emsp;
+        <input type="number" step="any" name="lat" placeholder="degrees as a decimal" value="">
+        <label for="lng">Longitude:</label>&emsp;
+        <input type="number" step="any" name="lng" placeholder="degrees as a decimal" value=""><br>
+      </fieldset>
+    <input type="submit">
+</form>
 
 {% if stars | length > 0 %}
 <h3>Saved Stars:</h3>
@@ -25,4 +40,6 @@
 {% endfor %}
 </ul>
 {% endif %}
+<script src="http://maps.googleapis.com/maps/api/js?key={{ secret }}&libraries=places"></script>
+<script src="/static/jquery.geocomplete.js"></script>
 {% endblock %}

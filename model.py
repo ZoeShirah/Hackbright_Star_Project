@@ -60,7 +60,6 @@ class Constellation(db.Model):
 
     const_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(40), unique=True, nullable=False)
-    number_of_stars = db.Column(db.Integer)
 
     def __repr__(self):
         return "<constellation const_id = %d name= %s>" % (self.const_id, self.name)

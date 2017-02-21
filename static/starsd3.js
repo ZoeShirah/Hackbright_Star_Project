@@ -1,5 +1,8 @@
 "use strict";
 
+document.getElementById("directionValues").selectedIndex = -1;
+
+
 function getConstellations(){
 
   var direction = d3.select('#directionValues').node().value
@@ -56,12 +59,14 @@ function printStarData(starData) {
                             if (d.hasOwnProperty("name")){
                               tooltip.text(d.name);};
                             if (d.hasOwnProperty("constellations")){
-                                tooltip.append("text").text("\n" + d.constellations);};
+                                tooltip.append("html").html("<p>");
+                                tooltip.append("text").text("Constellation: "+d.constellations);
+                                tooltip.append("html").html("</p>");};
                           return tooltip.style("visibility", "visible");
                           })
                         .on("mousemove", function(){
-                          return tooltip.style("top", (d3.event.pageY-50)+"px")
-                                        .style("left",(d3.event.pageX+25)+"px");
+                          return tooltip.style("top", (d3.event.pageY-200)+"px")
+                                        .style("left",(d3.event.pageX-80)+"px");
                           })
                         .on("mouseout", function(){
                           return tooltip.style("visibility", "hidden");

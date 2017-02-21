@@ -590,4 +590,20 @@
     }
   };
 
+
+//activating geocomplete on my html pages
 })( jQuery, window, document );
+
+$(function(){
+        $("#geocomplete").geocomplete({
+          details: "form",
+          types: ["geocode", "establishment"],
+        });
+      });
+
+$(function(){ console.log("got here")
+        $("#geocomp").geocomplete({
+          details: ".latlng",
+          types: ["geocode", "establishment"],
+        });
+      });

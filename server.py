@@ -19,6 +19,7 @@ app = Flask(__name__)
 app.secret_key = "Polaris8222"
 # So that if you use an undefined variable in Jinja2, it raises an error.
 app.jinja_env.undefined = StrictUndefined
+SECRET = os.environ['GOOGLE_API_KEY']
 
 
 @app.route('/')
@@ -59,7 +60,7 @@ def show_star(star_id):
 def login_form():
     """Show user log in form"""
 
-    if session.get('logged_in') is True:
+    if session.get('user_id'):
         flash('user already signed in')
         return redirect('/')
     else:
@@ -87,7 +88,11 @@ def login_process():
 
     user_id = user.user_id
     session['user_id'] = user_id
-    print(session)
+    if user.lat is not None:
+        session["d_lat"] = user.lat
+        session["lat"] = c.convert_degrees_to_radians(user.lat)
+        session["d_lon"] = user.lon
+        session["lon"] = c.convert_degrees_to_radians(user.lon)
     flash("Logged In")
     return redirect("/users/" + str(user_id))
     return render_template("users.html")
@@ -97,9 +102,7 @@ def login_process():
 def generator_form():
     """Show generated map and form"""
 
-    secret = os.environ['GOOGLE_API_KEY']
-
-    return render_template("generator.html", secret=secret)
+    return render_template("generator.html", secret=SECRET)
 
 
 @app.route("/register")
@@ -171,7 +174,29 @@ def show_user(user_id):
 
     return render_template("user_info.html",
                            user=user,
-                           stars=star_dict)
+                           stars=star_dict,
+                           secret=SECRET)
+
+
+@app.route("/set_user_location")
+def set_user_location():
+    user_id = session.get("user_id")
+    lat = request.args.get("lat")
+    lon = request.args.get("lng")
+    user = User.query.filter_by(user_id=user_id).one()
+    user.lat = lat
+    user.lon = lon
+    db.session.commit()
+
+    lat = c.convert_degrees_to_radians(lat)
+    session["lat"] = lat
+    session["d_lat"] = float(lat)
+
+    lon = c.convert_degrees_to_radians(lon)
+    session["lon"] = lon
+    session["d_lon"] = float(lon)
+
+    return redirect("/users/"+str(user_id))
 
 
 @app.route("/add_to_saved/<star_id>")
@@ -246,15 +271,12 @@ def change_defaults():
     if lat:
         latit = c.convert_degrees_to_radians(lat)
         session["lat"] = latit
-    else:
-        lat = 37.7749295
-        session["lat"] = 0.65929689448
+        session["d_lat"] = float(lat)
+
     if lon:
         longi = c.convert_degrees_to_radians(lon)
         session["lon"] = longi
-    else:
-        lon = -122.4194155
-        session["lon"] = -2.1366218688
+        session["d_lon"] = float(lon)
 
     if date:
         date = str(date)
@@ -265,9 +287,26 @@ def change_defaults():
         dttz_object = local_tz.localize(dt_object, is_dst=None)
         dt_utc = dttz_object.astimezone(pytz.utc)
         session["time"] = dt_utc
-    else:
-        if "time" in session:
-            del session["time"]
+
+    return redirect('/generator')
+
+
+@app.route('/clear')
+def clearSession():
+    if "lat" in session:
+        del session["lat"]
+        del session["d_lat"]
+    if "lon" in session:
+        del session["lon"]
+        del session["d_lon"]
+    if "time" in session:
+        del session["time"]
+    if session['user_id']:
+        user = User.query.filter_by(user_id=session['user_id']).one()
+        session["d_lat"] = user.lat
+        session["lat"] = c.convert_degrees_to_radians(user.lat)
+        session["d_lon"] = user.lon
+        session["lon"] = c.convert_degrees_to_radians(user.lon)
 
     return redirect('/generator')
 

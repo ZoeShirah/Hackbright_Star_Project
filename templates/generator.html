@@ -14,15 +14,20 @@
 <button type="button" id="constellations">Constellations</button>
 <button type="button" id="clear">Clear</button>
 <div id="v_const"></div>
-<div class="indented">
+<div class="box indented">
     <div id='d3starfield'></div>
+    <div class='arrow'>
+        <img src='/static/arrow-right.png' alt="arrow" class="image">
+    </div>
 </div>
-<!-- <p class="indented">Note: Default lat/long is for Hackbright, San Francisco, CA.  Default time is now</p> -->
-<p class="indented">{% if "lat" in session %}
-    Latitude: {{ '%.10f' | format(session['lat']) }} radians&emsp;
+<!-- displaying time and location -->
+<p class="indented">{% if "d_lat" in session %}
+    Latitude: {{ '%.10f' | format(session['d_lat']) }}&deg;&emsp;
+{% else %}
+    Default lat/long is for Hackbright Academy, San Francisco, CA
 {% endif %}
-{% if "lon" in session %}
-    Longitude: {{ '%.10f' | format(session['lon']) }} radians&emsp;
+{% if "d_lon" in session %}
+    Longitude: {{ '%.10f' | format(session['d_lon']) }}&deg;&emsp;
 {% endif %}
 {% if "time" in session %}
     DateTime in UTC: {{ session["time"] }}
@@ -30,8 +35,9 @@
     DateTime: now
 {% endif %}
 </p>
+<!-- adjusting time and location -->
 <form action="/change_defaults" class="indented" id="otherParams">
-    Enter a Location to autofill latitude and longitude:&emsp; <input id="geocomplete" type="text" placeholder="Type in an address" value="Hackbright Academy" />
+    Enter a Location to autofill latitude and longitude:&emsp; <input id="geocomplete" type="text" placeholder="Type in an address" value="Hackbright Academy">
       <fieldset>
         <label for="lat">Latitude:</label>&emsp;
         <input type="number" step="any" name="lat" placeholder="degrees as a decimal" value="">
@@ -40,8 +46,12 @@
       </fieldset>
     <label for="date">Date/Time:</label>
     <input type="datetime-local" step="any" name="date">
-    <input type="submit" value="Submit/Reset">
+    <input type="submit" value="Submit">
 </form>
+<form action="/clear" class="indented">
+    <input type="submit" id="reset" value="Reset Time and Location">
+</form>
+<!-- scripts -->
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src='/static/starsd3.js'></script>
 <script src="http://maps.googleapis.com/maps/api/js?key={{ secret }}&libraries=places"></script>

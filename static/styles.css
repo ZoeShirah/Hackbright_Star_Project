@@ -24,7 +24,7 @@ body{
 }
 
 .d3tooltip {
-    border-radius: 2px;
+    border-radius: 1px;
     line-height: 1;
     padding: 5px;
     color: black;
@@ -38,4 +38,26 @@ body{
 #constellation {
     margin-right: 500px;
     display: inline-block;
+}
+
+.box {
+    position: relative;
+}
+
+.image {
+  width: 20px;
+  height: auto;
+}
+
+.arrow {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  right: 15%;
+}
+
+
+.box:hover .arrow {
+  opacity: 0.8;
 }

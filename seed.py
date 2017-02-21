@@ -15,7 +15,7 @@ def load_stars():
     # Delete all rows in table, so if we need to run this a second time,
     # we won't be trying to add duplicates
     Star.query.delete()
-    
+
     f = open("seed_data/hygfull.csv")
     next(f)  # skip first row
     for row in f:
