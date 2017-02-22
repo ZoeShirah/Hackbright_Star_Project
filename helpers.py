@@ -1,164 +1,86 @@
 import calculations as c
-from flask import session
-from model import Star, Const_Line, Constellation
-from datetime import datetime
-from sqlalchemy import or_
+from model import Star, User, UserStar, db
+from sqlalchemy.orm.exc import NoResultFound
+import generator_helpers as g
 
 
-def get_altaz(star):
-    """Get the Altitude and Azimuth of a star given the star object.
+def make_user(username, password, email):
+    try:
+        user = User.query.filter_by(username=username).one()
+        return None
+    except NoResultFound:
+        user = User(username=username,
+                    password=password,
+                    email=email)
 
-    Lat/Long and Time are from the flask session, or the default if the user
-    has not entered any.
-    """
-
-    #ra is in hours/min/sec, 1 hour = 15 degrees, so must multiply by 15
-    ra = c.convert_degrees_to_radians((15*star.ra))
-    dec = c.convert_degrees_to_radians(star.dec)
-    la = float(session.get("lat", 0.65929689448))
-    lo = float(session.get("lon", -2.1366218688))
-    t = session.get("time", datetime.utcnow())
-
-    return c.get_current_altAz(float(ra), float(dec), lo, la, t)
+        #add to the session and commit
+        db.session.add(user)
+        db.session.commit()
+        return user
 
 
-def create_list_of_stars(direction):
-    """with direction create a list of visible stars by querying the database"""
-
-    stars = Star.query.filter(Star.magnitude < 5).order_by(Star.star_id).all()
-
-    star_data = []
-    for star in stars:
-        altAz = get_altaz(star)
-        visible = c.get_visible_window(altAz.alt, altAz.az)
-        if direction in visible:
-            star_info = c.convert_sky_to_pixel(altAz.alt, altAz.az, direction)
-            color = c.get_color(float(star.color_index))
-            star_info.update({'magnitude': float(star.magnitude),
-                              'color': color,
-                              'id': star.star_id})
-            if star.name:
-                star_info.update({'name': star.name})
-
-            const_list = get_list_of_constellations(star.star_id)
-            if len(const_list) > 0:
-                star_info.update({'constellations': const_list})
-
-            star_data.append(star_info)
-
-    return star_data
+def get_star_info(star_id):
+    try:
+        star = Star.query.filter_by(star_id=star_id).one()
+        consts = g.get_list_of_constellations(star_id)
+        for i in range(len(consts)):
+            consts[i] = c.replace_constellation_name(consts[i])
+    except NoResultFound:
+        star = None
+        consts = []
+    return [star, consts]
 
 
-def get_list_of_constellations(star_id):
-    """Get a list of constellations a particular star is in"""
-    consts = Const_Line.query.filter(or_(Const_Line.startpoint == star_id, Const_Line.endpoint == star_id)).all()
-    if consts:
-        const_set = set()
-        for const in consts:
-            name = const.constellation.name
-            const_set.add(name)
-        return list(set(const_set))
+def get_userStar_dict(user_id):
+    userStars = UserStar.query.filter_by(user_id=user_id).all()
+
+    star_dict = {}
+    for userStar in userStars:
+        UStar = Star.query.filter_by(star_id=userStar.star_id).one()
+        star_dict[UStar.star_id] = {'ra': UStar.ra, 'dec': UStar.dec}
+        if UStar.name.strip():
+            star_name = UStar.name
+            star_dict[UStar.star_id].update({'name': star_name})
+    return star_dict
+
+
+def find_star(term):
+    try:
+        search_id = term[:8]
+        search_star = int(search_id)
+    except ValueError:
+        search_star = term
+    if type(search_star) == int:
+        return "/stars/" + term[:8]
     else:
-        return []
+        search_star = search_star.lower().capitalize()
+        try:
+            star = Star.query.filter_by(name=search_star).one()
+            return "/stars/" + str(star.star_id)
+        except NoResultFound:
+            return None
 
 
-def convert_line_to_pixel(const_line, direction):
-    """Convert the start/end of a line (which are stars) to pixel coordinates"""
+def validate_login(username, password):
+    try:
+        user = User.query.filter_by(username=username).one()
+    except NoResultFound:
+        return str(username) + " not found, please try again or register a new account"
 
-    start = const_line.startpoint
-    end = const_line.endpoint
+    if password != user.password:
+        return "Wrong password"
 
-    start_star = Star.query.filter_by(star_id=start).one()
-    end_star = Star.query.filter_by(star_id=end).one()
-
-    start_position = get_altaz(start_star)
-    end_position = get_altaz(end_star)
-
-    start_xy = c.convert_sky_to_pixel(start_position.alt, start_position.az, direction)
-    end_xy = c.convert_sky_to_pixel(end_position.alt, end_position.az, direction)
-
-    return [start_xy, end_xy]
+    return user
 
 
-def replace_constellation_name(name):
-    """Replaces a constellation abbreviation with the full name"""
-    abbr = name
-
-    conversion = {'ORI': 'Orion', 'GEM': 'Gemini', 'CNC': 'Cancer',
-                  'CMI': 'Canis Minor', 'CMA': 'Canis Major', 'MON': 'Monoceros',
-                  'LEP': 'Lepus', 'SEX': 'Sextans', 'PYX': 'Pyxis',
-                  'TRI': 'Triangulum', 'ARI': 'Aries', 'LEO': 'Leo',
-                  'LMI': 'Leo Minor', 'LYN': 'Lynx', 'VIR': 'Virgo',
-                  'VEL': 'Vela', 'CEN': 'Centaurus', 'CRT': 'Crater',
-                  'ANT': 'Antlia', 'HYA': 'Hydra', 'PUP': 'Puppis',
-                  'COL': 'Columba', 'CAR': 'Carina', 'CAS': 'Cassiopeia',
-                  'PIC': 'Pictor', 'DOR': 'Dorado', 'AND': 'Andromeda',
-                  'TAU': 'Taurus', 'AUR': 'Auriga', 'HOR': 'Horologium',
-                  'CAE': 'Caelum', 'SCL': 'Sculptor', 'CET': 'Cetus',
-                  'FOR': 'Fornax', 'PHE': 'Phoenix', 'CAM': 'Camelopardelis',
-                  'ERI': 'Eridanus', 'PEG': 'Pegasus', 'PER': 'Persius',
-                  'PSC': 'Pisces', 'UMA': 'Ursa Major', 'UMI': 'Ursa Minor',
-                  'CEP': 'Cepheus', 'CHA': 'Chamaeleon', 'CIR': 'Circinus',
-                  'COM': 'Coma Berenices', 'CRA': 'Corona Austrina', 'CRB': 'Corona Borealis',
-                  'CRU': 'Crux', 'CRV': 'Corvus', 'CVN': 'Canes Venatici',
-                  'CYG': 'Cygnus', 'DEL': 'Delphinus', 'DRA': 'Draco',
-                  'EQU': 'Equuleus', 'GRU': 'Grus', 'HER': 'Hercules',
-                  'HYI': 'Hydrus', 'IND': 'Indus', 'LAC': 'Lacerta',
-                  'LIB': 'Libra', 'LUP': 'Lupus', 'LYR': 'Lyra',
-                  'MEN': 'Mensa', 'MIC': 'Microscopium', 'MUS': 'Musca',
-                  'NOR': 'Norma', 'OCT': 'Octans', 'OPH': 'Ophiuchus',
-                  'PAV': 'Pavo', 'PSA': 'Piscis Austinus', 'RET': 'Reticulum',
-                  'SCO': 'Scorpio', 'SCT': 'Scutum', 'SER': 'Serpens',
-                  'SGE': 'Sagitta', 'SGR': 'Sagittarius', 'APS': 'Apus',
-                  'AQL': 'Aquila', 'AQR': 'Aquarius', 'ARA': 'Ara',
-                  'VOL': 'Volans', 'VUL': 'Vulpecula', 'BOO': 'Bootes',
-                  'CAP': 'Capricornus', 'TUC': 'Tucana', 'TRA': 'Triangulum Australe',
-                  'TEL': 'Telescopium'}
-
-    fullname = conversion[abbr]
-
-    return fullname
-
-
-def create_list_of_constellations(star_list, direction):
-    """create a dictionary containing info about visible constellations"""
-
-    star_ids = []
-    for star in star_list:
-        star_ids.append(star['id'])
-
-    constellation_ids = []
-    lines_in_frame = []
-    constellations = []
-
-    lines = Const_Line.query.all()
-
-    # gets lines where the full line is actually in the frame
-    for line in lines:
-        if line.startpoint in star_ids:
-            if line.endpoint in star_ids:
-                lines_in_frame.append(line)
-
-    # gets a list of all the constellations those lines belong to
-    for line in lines_in_frame:
-        if line.const not in constellation_ids:
-            constellation_ids.append(line.const)
-
-    # creates dictionary for each constellation with name and id
-    for const_id in constellation_ids:
-        const = Constellation.query.filter_by(const_id=const_id).one()
-        name = replace_constellation_name(const.name)
-        constellation = {"id": const_id,
-                         "name": name}
-        constellations.append(constellation)
-
-    #creates list of lines with pixel coordinate start and end points
-    lines = []
-    for line in lines_in_frame:
-        line = convert_line_to_pixel(line, direction)
-        lines.append(line)
-
-    constellation_info = {"constellations": constellations,
-                          "lines": lines}
-
-    return constellation_info
+def save_a_star(star_id, user_id):
+    try:
+        userStars = UserStar.query.filter_by(user_id=user_id).filter_by(star_id=star_id).one()
+        return "You have already saved this star!"
+    except NoResultFound:
+        userStars = UserStar(user_id=user_id,
+                             star_id=star_id)
+        # add to the session and commit
+        db.session.add(userStars)
+        db.session.commit()
+    return "Star Added!"

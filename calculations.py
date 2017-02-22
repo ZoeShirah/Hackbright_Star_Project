@@ -1,9 +1,22 @@
-"""helper functions to calculate star locations"""
+"""helper functions to calculate star locations and names"""
 
 from sidereal import sidereal
 from datetime import datetime
+import pytz
+from tzwhere import tzwhere
 import math
 from decimal import Decimal
+
+
+def get_utc_time(date, lat, lon):
+    date = str(date)
+
+    dt_object = datetime.strptime(date, '%Y-%m-%dT%H:%M')
+    zone = tzwhere.tzwhere().tzNameAt(float(lat), float(lon))
+    local_tz = pytz.timezone(zone)
+    dttz_object = local_tz.localize(dt_object, is_dst=None)
+    dt_utc = dttz_object.astimezone(pytz.utc)
+    return dt_utc
 
 
 def convert_degrees_to_radians(decimaldegree):
@@ -89,6 +102,8 @@ def convert_sky_to_pixel(alt, az, direction):
 
 
 def get_color(colorIndex):
+    """get color of a star from it's color index"""
+
     if colorIndex <= 0.15:  # blue is about -0.33 to 0.15
         color = "#e8f0ff"
     elif colorIndex < 0.6:  # white from 0.15 to 0.6
@@ -103,15 +118,40 @@ def get_color(colorIndex):
     return color
 
 
-#north = 0 degrees azimuth, view for north facing window is going to be
-#270 degrees to 90 degrees going clockwise (-90 to 90)  altitude is degrees
-#above the horizon (0 to 90)
+def replace_constellation_name(name):
+    """Replaces a constellation abbreviation with the full name"""
 
-#north window will be azimuth 305 degrees to 55 degrees, altitude about 0 to 80
-#so it will see 90 degrees up and 110 degrees side to side
-#south window will be
-#east window will be
-#west window will be
+    conversion = {'ORI': 'Orion', 'GEM': 'Gemini', 'CNC': 'Cancer',
+                  'CMI': 'Canis Minor', 'CMA': 'Canis Major', 'MON': 'Monoceros',
+                  'LEP': 'Lepus', 'SEX': 'Sextans', 'PYX': 'Pyxis',
+                  'TRI': 'Triangulum', 'ARI': 'Aries', 'LEO': 'Leo',
+                  'LMI': 'Leo Minor', 'LYN': 'Lynx', 'VIR': 'Virgo',
+                  'VEL': 'Vela', 'CEN': 'Centaurus', 'CRT': 'Crater',
+                  'ANT': 'Antlia', 'HYA': 'Hydra', 'PUP': 'Puppis',
+                  'COL': 'Columba', 'CAR': 'Carina', 'CAS': 'Cassiopeia',
+                  'PIC': 'Pictor', 'DOR': 'Dorado', 'AND': 'Andromeda',
+                  'TAU': 'Taurus', 'AUR': 'Auriga', 'HOR': 'Horologium',
+                  'CAE': 'Caelum', 'SCL': 'Sculptor', 'CET': 'Cetus',
+                  'FOR': 'Fornax', 'PHE': 'Phoenix', 'CAM': 'Camelopardelis',
+                  'ERI': 'Eridanus', 'PEG': 'Pegasus', 'PER': 'Persius',
+                  'PSC': 'Pisces', 'UMA': 'Ursa Major', 'UMI': 'Ursa Minor',
+                  'CEP': 'Cepheus', 'CHA': 'Chamaeleon', 'CIR': 'Circinus',
+                  'COM': 'Coma Berenices', 'CRA': 'Corona Austrina', 'CRB': 'Corona Borealis',
+                  'CRU': 'Crux', 'CRV': 'Corvus', 'CVN': 'Canes Venatici',
+                  'CYG': 'Cygnus', 'DEL': 'Delphinus', 'DRA': 'Draco',
+                  'EQU': 'Equuleus', 'GRU': 'Grus', 'HER': 'Hercules',
+                  'HYI': 'Hydrus', 'IND': 'Indus', 'LAC': 'Lacerta',
+                  'LIB': 'Libra', 'LUP': 'Lupus', 'LYR': 'Lyra',
+                  'MEN': 'Mensa', 'MIC': 'Microscopium', 'MUS': 'Musca',
+                  'NOR': 'Norma', 'OCT': 'Octans', 'OPH': 'Ophiuchus',
+                  'PAV': 'Pavo', 'PSA': 'Piscis Austinus', 'RET': 'Reticulum',
+                  'SCO': 'Scorpio', 'SCT': 'Scutum', 'SER': 'Serpens',
+                  'SGE': 'Sagitta', 'SGR': 'Sagittarius', 'APS': 'Apus',
+                  'AQL': 'Aquila', 'AQR': 'Aquarius', 'ARA': 'Ara',
+                  'VOL': 'Volans', 'VUL': 'Vulpecula', 'BOO': 'Bootes',
+                  'CAP': 'Capricornus', 'TUC': 'Tucana', 'TRA': 'Triangulum Australe',
+                  'TEL': 'Telescopium'}
 
-#size of pixel image = 630px height(altitude) x 1260px width(azimuth)
-#SF long/lat = -122.4194155/37.7749295
+    fullname = conversion[name]
+
+    return fullname

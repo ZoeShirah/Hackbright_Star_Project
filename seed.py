@@ -83,20 +83,31 @@ def load_constellations():
             print "added constellation"
 
         try:
-            star = Star.query.filter(func.abs(Star.ra - ra) < 0.01, func.abs(Star.dec - dec) < 0.01, func.abs(Star.magnitude - mag) < 0.46).one()
-            points.append(star.star_id)
-            print "points + 1", points
-            if len(points) == 2:   # only add a line if we have both end points
-                const = Constellation.query.filter(Constellation.name == constname).one()
-                const_line = Const_Line(startpoint=points.pop(0),
-                                        endpoint=points[0],
-                                        const=const.const_id)
-                db.session.add(const_line)
-                print "added line"
-        except (NoResultFound, MultipleResultsFound):
-            count = count + 1
-            print "******No/Multiple*******", count  # see how many stars were skipped
-            continue
+            star = Star.query.filter(func.abs(Star.ra - ra) < 0.01, func.abs(Star.dec - dec) < 0.01, func.abs(Star.magnitude - mag) < 0.3).one()
+        except MultipleResultsFound:
+            try:
+                stars = Star.query.filter(func.abs(Star.ra - ra) < 0.01, func.abs(Star.dec - dec) < 0.01, func.abs(Star.magnitude - mag) < 0.3).order_by(Star.magnitude).all()
+                print "********STARSSSS*********", stars
+                star = stars[0]
+            except NoResultFound:
+                count = count+1
+                print "******MULTIPLE TO NO******", count, constname, starname
+        except NoResultFound:
+            try:
+                star = Star.query.filter(func.abs(Star.ra - ra) < 0.015, func.abs(Star.dec - dec) < 0.015).one()
+            except(NoResultFound, MultipleResultsFound):
+                count = count + 1
+                print "******No Results*******", count, constname, starname  # see how many stars were skipped
+                continue
+        points.append(star.star_id)
+        print "points + 1", points
+        if len(points) == 2:   # only add a line if we have both end points
+            const = Constellation.query.filter(Constellation.name == constname).one()
+            const_line = Const_Line(startpoint=points.pop(0),
+                                    endpoint=points[0],
+                                    const=const.const_id)
+            db.session.add(const_line)
+            print "added line"
 
     db.session.commit()
     f.close()

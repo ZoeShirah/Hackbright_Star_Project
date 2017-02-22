@@ -2,17 +2,15 @@
 
 import os
 from jinja2 import StrictUndefined
-import calculations as c
-from helpers import create_list_of_stars, create_list_of_constellations, get_list_of_constellations, replace_constellation_name
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 import json
-import sqlalchemy
-from datetime import datetime
-import pytz
-from tzwhere import tzwhere
-from model import Star, User, UserStar, connect_to_db, db
-
+from model import Star, User, connect_to_db, db
+#helper files
+import calculations as c
+from generator_helpers import create_list_of_stars, create_list_of_constellations
+from helpers import get_star_info, make_user, get_userStar_dict
+from helpers import find_star, validate_login, save_a_star
 
 app = Flask(__name__)
 # Required to use Flask sessions and the debug toolbar
@@ -48,14 +46,8 @@ def star_list(last=0):
 def show_star(star_id):
     """Show info about a star"""
 
-    try:
-        star = Star.query.filter_by(star_id=star_id).one()
-        consts = get_list_of_constellations(star_id)
-        for i in range(len(consts)):
-            consts[i] = replace_constellation_name(consts[i])
-    except sqlalchemy.orm.exc.NoResultFound:
-        star = None
-        consts = []
+    star, consts = get_star_info(star_id)
+
     return render_template("star_info.html",
                            star=star,
                            constellations=consts)
@@ -65,7 +57,7 @@ def show_star(star_id):
 def login_form():
     """Show user log in form"""
 
-    if session.get('user_id'):
+    if 'user_id' in session:
         flash('user already signed in')
         return redirect('/')
     else:
@@ -79,28 +71,18 @@ def login_process():
     username = request.form.get('username')
     password = request.form.get('password')
 
-    try:
-        user = User.query.filter_by(username=username).one()
-        if password == user.password:
-            pass   # login -- for clairty in code
-        else:
-            flash("Wrong Password")
-            return redirect('/login')
+    message = validate_login(username, password)
+    if type(message) is str:
+        flash(message)
+        return redirect("/login")
+    else:
+        user = message
+        flash(("%s Logged In!") % (username))
+        session['user_id'] = user.user_id
+        if user.lat is not None:
+            update_session(user.lat, user.lon)
 
-    except sqlalchemy.orm.exc.NoResultFound:
-        flash("%s not found, please try again or register a new account" % (username))
-        return redirect('/login')
-
-    user_id = user.user_id
-    session['user_id'] = user_id
-    if user.lat is not None:
-        session["d_lat"] = user.lat
-        session["lat"] = c.convert_degrees_to_radians(user.lat)
-        session["d_lon"] = user.lon
-        session["lon"] = c.convert_degrees_to_radians(user.lon)
-    flash("Logged In")
-    return redirect("/users/" + str(user_id))
-    return render_template("users.html")
+    return redirect("/users/" + str(user.user_id))
 
 
 @app.route("/generator")
@@ -129,22 +111,12 @@ def register_process():
     password = request.form.get('password')
     email = request.form.get('e-mail')
 
-    try:
-        user = User.query.filter_by(username=username).one()
-        flash('User already exists, please sign in or use another email')
+    user = make_user(username, password, email)
+    if user is None:
+        flash('User already exists, please choose a different username or sign in')
         return redirect('/register')
 
-    except sqlalchemy.orm.exc.NoResultFound:
-        user = User(username=username,
-                    password=password,
-                    email=email)
-
-        #add to the session and commit
-        db.session.add(user)
-        db.session.commit()
-
     session['user_id'] = user.user_id
-    print(session)
     flash("Logged In")
     return redirect("/")
 
@@ -167,15 +139,7 @@ def show_user(user_id):
     """Show info about a user"""
 
     user = User.query.filter_by(user_id=user_id).one()
-    userStars = UserStar.query.filter_by(user_id=user_id).all()
-
-    star_dict = {}
-    for userStar in userStars:
-        UStar = Star.query.filter_by(star_id=userStar.star_id).one()
-        star_dict[UStar.star_id] = {'ra': UStar.ra, 'dec': UStar.dec}
-        if UStar.name.strip():
-            star_name = UStar.name
-            star_dict[UStar.star_id].update({'name': star_name})
+    star_dict = get_userStar_dict(user_id)
 
     return render_template("user_info.html",
                            user=user,
@@ -188,18 +152,13 @@ def set_user_location():
     user_id = session.get("user_id")
     lat = request.args.get("lat")
     lon = request.args.get("lng")
+
     user = User.query.filter_by(user_id=user_id).one()
     user.lat = lat
     user.lon = lon
     db.session.commit()
 
-    lat = c.convert_degrees_to_radians(lat)
-    session["lat"] = lat
-    session["d_lat"] = float(lat)
-
-    lon = c.convert_degrees_to_radians(lon)
-    session["lon"] = lon
-    session["d_lon"] = float(lon)
+    update_session(lat, lon)
 
     return redirect("/users/"+str(user_id))
 
@@ -210,17 +169,7 @@ def add_to_saved(star_id):
 
     user_id = session.get('user_id')
 
-    try:
-        userStars = UserStar.query.filter_by(user_id=user_id).filter_by(star_id=star_id).one()
-        return "You have already saved this star!"
-    except sqlalchemy.orm.exc.NoResultFound:
-        userStars = UserStar(user_id=user_id,
-                             star_id=star_id)
-
-        # add to the session and commit
-        db.session.add(userStars)
-        db.session.commit()
-    return "Star Added!"
+    return save_a_star(star_id, user_id)
 
 
 @app.route('/star_data.json/<direction>')
@@ -247,22 +196,12 @@ def search():
     """Search for a star by name or star id"""
 
     term = request.args.get("name")
-    try:
-        search_id = term[:8]
-        search_star = int(search_id)
-    except ValueError:
-        search_star = term
-
-    if type(search_star) == int:
-        return redirect("/stars/" + term[:8])
+    url = find_star(term)
+    if url:
+        return redirect(url)
     else:
-        search_star = search_star.lower().capitalize()
-        try:
-            star = Star.query.filter_by(name=search_star).one()
-            return redirect("/stars/" + str(star.star_id))
-        except sqlalchemy.orm.exc.NoResultFound:
-            flash("no star with that name in this database")
-            return redirect("/stars")
+        flash("no star with that name in this database")
+        return redirect("/stars")
 
 
 @app.route('/change_defaults')
@@ -273,24 +212,15 @@ def change_defaults():
     lon = request.args.get("lng")
     date = request.args.get("date")
 
-    if lat:
-        latit = c.convert_degrees_to_radians(lat)
-        session["lat"] = latit
-        session["d_lat"] = float(lat)
+    if not lat:
+        lat = session.get("d_lat")
+    if not lon:
+        lon = session.get("d_lon")
 
-    if lon:
-        longi = c.convert_degrees_to_radians(lon)
-        session["lon"] = longi
-        session["d_lon"] = float(lon)
+    update_session(lat, lon)
 
     if date:
-        date = str(date)
-
-        dt_object = datetime.strptime(date, '%Y-%m-%dT%H:%M')
-        zone = tzwhere.tzwhere().tzNameAt(float(lat), float(lon))
-        local_tz = pytz.timezone(zone)
-        dttz_object = local_tz.localize(dt_object, is_dst=None)
-        dt_utc = dttz_object.astimezone(pytz.utc)
+        dt_utc = c.get_utc_time(date, lat, lon)
         session["time"] = dt_utc
 
     return redirect('/generator')
@@ -306,15 +236,23 @@ def clearSession():
         del session["d_lon"]
     if "time" in session:
         del session["time"]
-    if session['user_id']:
+    if 'user_id' in session:
         user = User.query.filter_by(user_id=session['user_id']).one()
-        session["d_lat"] = user.lat
-        session["lat"] = c.convert_degrees_to_radians(user.lat)
-        session["d_lon"] = user.lon
-        session["lon"] = c.convert_degrees_to_radians(user.lon)
+        update_session(user.lat, user.lon)
 
     return redirect('/generator')
 
+
+def update_session(lat=None, lon=None):
+    if lat:
+        r_lat = c.convert_degrees_to_radians(lat)
+        session["lat"] = r_lat
+        session["d_lat"] = float(lat)
+
+    if lon:
+        r_lon = c.convert_degrees_to_radians(lon)
+        session["lon"] = r_lon
+        session["d_lon"] = float(lon)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
