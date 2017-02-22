@@ -96,7 +96,7 @@ function printStarData(starData) {
                               tooltip.text(d.name);};
                             if (d.hasOwnProperty("constellations")){
                                 tooltip.append("html").html("<p>");
-                                tooltip.append("text").text("Constellation: "+d.constellations);
+                                tooltip.append("text").text("Constellation: "+d.constellations.join(", "));
                                 tooltip.append("html").html("</p>");};
                           return tooltip.style("visibility", "visible");
                           })
@@ -111,23 +111,21 @@ function printStarData(starData) {
 
 
 function constellate(constellation_data){
-  var visible = [];
-  for (var x = 0;x < constellation_data.length; x++){
-    var data = constellation_data[x];
-    visible.push(data.name);
-    var lineList = data.lines;
-    for (var i=0; i<lineList.length; i++){
-      var lineData = lineList[i];
-      var lineFunction = d3.line()
-                              .x(function(d) { return d.x; })
-                              .y(function(d) { return d.y; });
+  var visible = []
+  for (var i=0; i<constellation_data["constellations"].length; i++){
+    visible.push(constellation_data["constellations"][i].name);}
+  var lineList = constellation_data["lines"];
+  for (var i=0; i<lineList.length; i++){
+    var lineData = lineList[i];
+    var lineFunction = d3.line()
+                         .x(function(d) { return d.x; })
+                         .y(function(d) { return d.y; });
 
-      var lineGraph = svgContainer.append("path")
+    var lineGraph = svgContainer.append("path")
                               .attr("d", lineFunction(lineData))
                               .attr("stroke", "yellow")
                               .attr("stroke-width", 1)
                               .attr("fill", "none");
-    }
   }
 
   d3.select('#v_const').append("text")

@@ -3,7 +3,7 @@
 import os
 from jinja2 import StrictUndefined
 import calculations as c
-from helpers import create_list_of_stars, create_list_of_constellations
+from helpers import create_list_of_stars, create_list_of_constellations, get_list_of_constellations, replace_constellation_name
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 import json
@@ -50,10 +50,15 @@ def show_star(star_id):
 
     try:
         star = Star.query.filter_by(star_id=star_id).one()
+        consts = get_list_of_constellations(star_id)
+        for i in range(len(consts)):
+            consts[i] = replace_constellation_name(consts[i])
     except sqlalchemy.orm.exc.NoResultFound:
         star = None
+        consts = []
     return render_template("star_info.html",
-                           star=star)
+                           star=star,
+                           constellations=consts)
 
 
 @app.route("/login")
@@ -134,7 +139,7 @@ def register_process():
                     password=password,
                     email=email)
 
-        # We need to add to the session and commit
+        #add to the session and commit
         db.session.add(user)
         db.session.commit()
 
@@ -215,7 +220,7 @@ def add_to_saved(star_id):
         # add to the session and commit
         db.session.add(userStars)
         db.session.commit()
-    return "Succesfully added star"
+    return "Star Added!"
 
 
 @app.route('/star_data.json/<direction>')

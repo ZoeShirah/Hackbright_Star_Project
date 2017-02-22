@@ -12,9 +12,9 @@
 <h3>your location:</h3> {{ user.lat }}, {{ user.lon }}
 {% endif%}
 <br><br>
-<h4>Set Your Latitude and Longitude:</h4>
+<h4>Set Your Location:</h4>
 <form action="/set_user_location" class="latlng">
-    Enter a location: &emsp; <input id="geocomp" type="text" placeholder="Type in an address" value="Hackbright Academy" />
+    Enter a location: &emsp; <input id="geocomp" type="text" placeholder="Type in an address" />
       <fieldset>
         <label for="lat">Latitude:</label>&emsp;
         <input type="number" step="any" name="lat" placeholder="degrees as a decimal" value="">

@@ -39,16 +39,27 @@ def create_list_of_stars(direction):
                               'id': star.star_id})
             if star.name:
                 star_info.update({'name': star.name})
-            consts = Const_Line.query.filter(or_(Const_Line.startpoint == star.star_id, Const_Line.endpoint == star.star_id)).all()
-            if consts:
-                const_set = set()
-                for const in consts:
-                    name = const.constellation.name
-                    const_set.add(name)
-                star_info.update({'constellations': list(const_set)})
+
+            const_list = get_list_of_constellations(star.star_id)
+            if len(const_list) > 0:
+                star_info.update({'constellations': const_list})
+
             star_data.append(star_info)
 
     return star_data
+
+
+def get_list_of_constellations(star_id):
+    """Get a list of constellations a particular star is in"""
+    consts = Const_Line.query.filter(or_(Const_Line.startpoint == star_id, Const_Line.endpoint == star_id)).all()
+    if consts:
+        const_set = set()
+        for const in consts:
+            name = const.constellation.name
+            const_set.add(name)
+        return list(set(const_set))
+    else:
+        return []
 
 
 def convert_line_to_pixel(const_line, direction):
@@ -70,6 +81,7 @@ def convert_line_to_pixel(const_line, direction):
 
 
 def replace_constellation_name(name):
+    """Replaces a constellation abbreviation with the full name"""
     abbr = name
 
     conversion = {'ORI': 'Orion', 'GEM': 'Gemini', 'CNC': 'Cancer',
@@ -109,7 +121,7 @@ def replace_constellation_name(name):
 
 
 def create_list_of_constellations(star_list, direction):
-    """create a list of dictionaries containing info about visible constellations"""
+    """create a dictionary containing info about visible constellations"""
 
     star_ids = []
     for star in star_list:
@@ -121,27 +133,32 @@ def create_list_of_constellations(star_list, direction):
 
     lines = Const_Line.query.all()
 
+    # gets lines where the full line is actually in the frame
     for line in lines:
         if line.startpoint in star_ids:
             if line.endpoint in star_ids:
                 lines_in_frame.append(line)
 
+    # gets a list of all the constellations those lines belong to
     for line in lines_in_frame:
         if line.const not in constellation_ids:
             constellation_ids.append(line.const)
 
+    # creates dictionary for each constellation with name and id
     for const_id in constellation_ids:
         const = Constellation.query.filter_by(const_id=const_id).one()
-        lines = []
-        for line in lines_in_frame:
-            if line.const == const_id:
-                line = convert_line_to_pixel(line, direction)
-                lines.append(line)
-
         name = replace_constellation_name(const.name)
         constellation = {"id": const_id,
-                         "name": name,
-                         "lines": lines}
+                         "name": name}
         constellations.append(constellation)
 
-    return constellations
+    #creates list of lines with pixel coordinate start and end points
+    lines = []
+    for line in lines_in_frame:
+        line = convert_line_to_pixel(line, direction)
+        lines.append(line)
+
+    constellation_info = {"constellations": constellations,
+                          "lines": lines}
+
+    return constellation_info

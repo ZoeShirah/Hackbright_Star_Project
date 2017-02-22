@@ -601,7 +601,7 @@ $(function(){
         });
       });
 
-$(function(){ console.log("got here")
+$(function(){ 
         $("#geocomp").geocomplete({
           details: ".latlng",
           types: ["geocode", "establishment"],

@@ -37,7 +37,7 @@ def load_stars():
                     magnitude=Mag,
                     color_index=ColorIndex)
 
-        # We need to add to the session and commit our work
+        #add to the session and commit our work
         db.session.add(star)
 
     db.session.commit()
@@ -69,23 +69,24 @@ def load_constellations():
             ra = float(ra)
             dec = float(dec)
             mag = float(mag)
-        except ValueError:
+        except ValueError:  # if a line is blank:
             del points[:]
             print "points", points
             continue
 
         try:
             Constellation.query.filter(Constellation.name == constname).one()
-        except NoResultFound:
+        except NoResultFound:  # only add a constellation if it's not already added
             constellation = Constellation(name=constname)
             db.session.add(constellation)
             db.session.flush()
             print "added constellation"
+
         try:
-            star = Star.query.filter(func.abs(Star.ra - ra) < 0.01, func.abs(Star.dec - dec) < 0.01, func.abs(Star.magnitude - mag) < 0.4).one()
+            star = Star.query.filter(func.abs(Star.ra - ra) < 0.01, func.abs(Star.dec - dec) < 0.01, func.abs(Star.magnitude - mag) < 0.46).one()
             points.append(star.star_id)
             print "points + 1", points
-            if len(points) == 2:
+            if len(points) == 2:   # only add a line if we have both end points
                 const = Constellation.query.filter(Constellation.name == constname).one()
                 const_line = Const_Line(startpoint=points.pop(0),
                                         endpoint=points[0],
@@ -94,7 +95,7 @@ def load_constellations():
                 print "added line"
         except (NoResultFound, MultipleResultsFound):
             count = count + 1
-            print "******No/Multiple*********", count
+            print "******No/Multiple*******", count  # see how many stars were skipped
             continue
 
     db.session.commit()
