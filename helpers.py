@@ -5,6 +5,8 @@ import generator_helpers as g
 
 
 def make_user(username, password, email):
+    """create a new user and commit it to the database"""
+
     try:
         user = User.query.filter_by(username=username).one()
         return None
@@ -20,6 +22,8 @@ def make_user(username, password, email):
 
 
 def get_star_info(star_id):
+    """query the database for info about a star and which constellations its in"""
+
     try:
         star = Star.query.filter_by(star_id=star_id).one()
         consts = g.get_list_of_constellations(star_id)
@@ -32,6 +36,8 @@ def get_star_info(star_id):
 
 
 def get_userStar_dict(user_id):
+    """query the database to get all the stars a user has saved"""
+
     userStars = UserStar.query.filter_by(user_id=user_id).all()
 
     star_dict = {}
@@ -45,6 +51,8 @@ def get_userStar_dict(user_id):
 
 
 def find_star(term):
+    """find a star by name or id, or return none"""
+
     try:
         search_id = term[:8]
         search_star = int(search_id)
@@ -62,6 +70,8 @@ def find_star(term):
 
 
 def validate_login(username, password):
+    """tests a login against info from the database"""
+
     try:
         user = User.query.filter_by(username=username).one()
     except NoResultFound:
@@ -74,6 +84,8 @@ def validate_login(username, password):
 
 
 def save_a_star(star_id, user_id):
+    """add a star to the user's list of saved stars"""
+
     try:
         userStars = UserStar.query.filter_by(user_id=user_id).filter_by(star_id=star_id).one()
         return "You have already saved this star!"

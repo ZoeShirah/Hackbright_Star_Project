@@ -9,6 +9,18 @@ from decimal import Decimal
 
 
 def get_utc_time(date, lat, lon):
+    """Takes in lat, long, date and time and returns a UTC datetime object
+
+        Date/time is accepted in YYYY-MM-DDTHH:MM format, where MM is the
+        month as a zero padded number and HH:MM is zero padded hour and
+        minute in 24hr time
+
+        Latitude and Longitude should be in degrees
+
+        >>> get_utc_time('2017-02-17T14:05', 37.7749295,-122.4194155)
+        datetime.datetime(2017, 2, 17, 22, 5, tzinfo=<UTC>)
+
+    """
     date = str(date)
 
     dt_object = datetime.strptime(date, '%Y-%m-%dT%H:%M')
@@ -20,6 +32,15 @@ def get_utc_time(date, lat, lon):
 
 
 def convert_degrees_to_radians(decimaldegree):
+    """Convert degrees to radians, 1 degree = pi/180 radians
+
+    >>> convert_degrees_to_radians(37.7749295)
+    Decimal('0.6592968944837353120174781444')
+
+    >>> convert_degrees_to_radians(-122.4194155)
+    Decimal('-2.136621868841980316338232946')
+
+    """
     return Decimal(decimaldegree)*Decimal(math.pi/180)
 
 
@@ -31,6 +52,15 @@ def get_current_altAz(ra, dec, lon=-2.1366218688, lat=0.65929689448, time=dateti
 
     lat/long of SF = 37.7749295/-122.4194155 degrees
                    = 0.65929689448/-2.1366218688 radians
+
+    >>> time = get_utc_time('2017-02-17T14:05', 37.7749295,-122.4194155)
+    >>> ra = float(convert_degrees_to_radians(2.5297431200*15))
+    >>> dec = float(convert_degrees_to_radians(89.2641380500))
+    >>> get_current_altAz(ra, dec, time=time).alt
+    0.668955194381751
+    >>> get_current_altAz(ra, dec, time=time).az
+    0.01075063551593279
+
     """
     coords = sidereal.RADec(ra, dec)
     h = coords.hourAngle(time, lon)
@@ -44,7 +74,7 @@ def get_visible_window(alt, az):
     a star is visible in a window if it is in within pi/3 radians of the center
     point of the direction, where north = 0, east = pi/2, south = pi, west = 3pi/2
 
-    >>>  get_visible_window(math.pi/2, math.pi/3)
+    >>> get_visible_window(math.pi/2, math.pi/3)
     ['North', 'East']
 
     >>> get_visible_window(math.pi/4, math.pi/2)
@@ -71,15 +101,19 @@ def get_visible_window(alt, az):
 def convert_sky_to_pixel(alt, az, direction):
     """Take altitude and azimuth and convert to pixel coords.
 
-        pixel canvas size = 600px height(altitude) x 800px width(azimuth)
+    pixel canvas size = 600px height(altitude) x 800px width(azimuth)
 
-        Total azimuth range = 2pi/3, to convert from a given az to a px:
-        givenAz * maxPx/maxAz = givenAz * (800/(2pi/3)
-                                = givenAz *(1200/math.pi)
+    Total azimuth range = 2pi/3, to convert from a given az to a px:
+    givenAz * maxPx/maxAz = givenAz * (800/(2pi/3)
+                            = givenAz *(1200/math.pi)
 
-        Total altitude range is pi/2, so
-        givenAl * maxPx/maxAlt
-                   = givenAlt *(600/(math.pi/2)) = givenALt *(1200/math.pi) = py
+    Total altitude range is pi/2, so
+    givenAl * maxPx/maxAlt
+               = givenAlt *(600/(math.pi/2)) = givenALt *(1200/math.pi) = py
+
+    >>> convert_sky_to_pixel(0.668955194381751, 0.01075063551593279, 'North')
+    {'y': 344.47793785714714, 'x': 404.10644028097596}
+
 
     """
     if direction == "East":
@@ -102,7 +136,12 @@ def convert_sky_to_pixel(alt, az, direction):
 
 
 def get_color(colorIndex):
-    """get color of a star from it's color index"""
+    """get color of a star from it's color index
+
+    >>> get_color(1)
+    '#fffbd1'
+
+    """
 
     if colorIndex <= 0.15:  # blue is about -0.33 to 0.15
         color = "#e8f0ff"
@@ -118,8 +157,13 @@ def get_color(colorIndex):
     return color
 
 
-def replace_constellation_name(name):
-    """Replaces a constellation abbreviation with the full name"""
+def replace_constellation_name(abbr):
+    """Replaces a constellation abbreviation with the full name
+
+    >>> replace_constellation_name('ORI')
+    'Orion'
+
+    """
 
     conversion = {'ORI': 'Orion', 'GEM': 'Gemini', 'CNC': 'Cancer',
                   'CMI': 'Canis Minor', 'CMA': 'Canis Major', 'MON': 'Monoceros',
@@ -141,17 +185,21 @@ def replace_constellation_name(name):
                   'CYG': 'Cygnus', 'DEL': 'Delphinus', 'DRA': 'Draco',
                   'EQU': 'Equuleus', 'GRU': 'Grus', 'HER': 'Hercules',
                   'HYI': 'Hydrus', 'IND': 'Indus', 'LAC': 'Lacerta',
-                  'LIB': 'Libra', 'LUP': 'Lupus', 'LYR': 'Lyra',
-                  'MEN': 'Mensa', 'MIC': 'Microscopium', 'MUS': 'Musca',
-                  'NOR': 'Norma', 'OCT': 'Octans', 'OPH': 'Ophiuchus',
-                  'PAV': 'Pavo', 'PSA': 'Piscis Austinus', 'RET': 'Reticulum',
-                  'SCO': 'Scorpio', 'SCT': 'Scutum', 'SER': 'Serpens',
-                  'SGE': 'Sagitta', 'SGR': 'Sagittarius', 'APS': 'Apus',
-                  'AQL': 'Aquila', 'AQR': 'Aquarius', 'ARA': 'Ara',
-                  'VOL': 'Volans', 'VUL': 'Vulpecula', 'BOO': 'Bootes',
-                  'CAP': 'Capricornus', 'TUC': 'Tucana', 'TRA': 'Triangulum Australe',
+                  'LIB': 'Libra', 'LUP': 'Lupus', 'LYR': 'Lyra', 'MEN': 'Mensa',
+                  'MIC': 'Microscopium', 'MUS': 'Musca', 'NOR': 'Norma',
+                  'OCT': 'Octans', 'OPH': 'Ophiuchus', 'PAV': 'Pavo',
+                  'PSA': 'Piscis Austinus', 'RET': 'Reticulum', 'SCO': 'Scorpio',
+                  'SCT': 'Scutum', 'SER': 'Serpens', 'SGE': 'Sagitta',
+                  'SGR': 'Sagittarius', 'APS': 'Apus', 'AQL': 'Aquila',
+                  'AQR': 'Aquarius', 'ARA': 'Ara', 'VOL': 'Volans',
+                  'VUL': 'Vulpecula', 'BOO': 'Bootes', 'CAP': 'Capricornus',
+                  'TUC': 'Tucana', 'TRA': 'Triangulum Australe',
                   'TEL': 'Telescopium'}
 
-    fullname = conversion[name]
+    fullname = conversion[abbr]
 
     return fullname
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
