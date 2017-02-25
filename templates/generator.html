@@ -4,27 +4,27 @@
 <h2>Star View</h2>
 <form id="direction">
     Select a direction:
-    <select id="directionValues">
+    <select id="directionValues" disabled>
         <option value="North">North</option>
         <option value="East">East</option>
         <option value="South">South</option>
         <option value="West">West</option>
     </select>&emsp;&emsp;
 </form>
-<button type="button" id="constellations">Constellations</button>
-<button type="button" id="clear">Clear</button>
-<div id="v_const"></div>
+<button type="button" class="const" id="constellations" disabled>Constellations</button>
+<button type="button" class="const" id="clear" disabled>Clear</button>
 <div class="box indented">
     <div id='d3starfield'></div>
-    <div class='rarrow'>
+    <div class='rarrow arrow click'>
         <img src='/static/arrow-right.png' alt="arrow" class="image">
     </div>
-    <div class='larrow'>
+    <div class='larrow arrow click'>
         <img src='/static/left-arrow.png' alt="arrow" class="image">
     </div>
     <div class="skyline">
         <img src='/static/horizon.png' alt="horizon" class="city">
     </div>
+    <div id="v_const"></div>
 </div>
 <!-- displaying time and location -->
 <p class="indented">{% if "d_lat" in session %}

@@ -1,25 +1,81 @@
 "use strict";
 
-document.getElementById("directionValues").selectedIndex = -1;
+var NorthInfo = null;
+var SouthInfo = null;
+var EastInfo = null;
+var WestInfo = null;
+var NorthConsts = null;
+var SouthConsts = null;
+var EastConsts = null;
+var WestConsts = null;
 
+
+$( document ).ready(function() { console.log("ready");
+  getDirection();
+  setInfo();
+});
 
 function getConstellations(){
 
   var direction = d3.select('#directionValues').node().value;
-  var url = "/constellation_data.json/"+direction;
-  d3.json(url, constellate);
+  if (direction === 'North'){
+    constellate(NorthConsts);
+  } else if (direction === 'East'){
+    constellate(EastConsts);
+  } else if (direction === 'South'){
+    constellate(SouthConsts);
+  }else if (direction === 'West'){
+    constellate(WestConsts);
+  }
 }
 
 d3.select("#constellations").on("click", getConstellations);
 
 function getDirection(){
 
-    var direction = d3.event.target.value;
+    var direction = d3.select('#directionValues').node().value;
     var url = "/star_data.json/" + direction;
     d3.json(url, printStarData);   
 }
 
-d3.select("#directionValues").on("change", getDirection);
+function activateMenu(){
+  $('#directionValues').removeAttr('disabled');
+  $('.arrow').removeClass('click')
+  console.log("go");
+}
+
+function activateButton(){
+  $('.const').removeAttr('disabled');
+  console.log("constellations activated");
+}
+
+function setInfo(){
+  d3.json("/star_data.json/North", function(data){NorthInfo=data;});
+  d3.json("/star_data.json/East", function(data){EastInfo=data;});
+  d3.json("/star_data.json/South", function(data){SouthInfo=data;});
+  d3.json("/star_data.json/West", function(data){WestInfo=data; activateMenu();});
+  d3.json("/constellation_data.json/North", function(data){NorthConsts=data;});
+  d3.json("/constellation_data.json/East", function(data){EastConsts=data;});
+  d3.json("/constellation_data.json/South", function(data){SouthConsts=data;});
+  d3.json("/constellation_data.json/West", function(data){WestConsts=data; activateButton();});
+  console.log("set");
+}
+
+function getInfo(){
+  var direction = d3.select('#directionValues').node().value;
+  if (direction === 'North'){
+    printStarData(NorthInfo);
+  } else if (direction === 'East'){
+    printStarData(EastInfo);
+  } else if (direction === 'South'){
+    printStarData(SouthInfo);
+  }else if (direction === 'West'){
+    printStarData(WestInfo);
+  }
+}
+
+
+d3.select("#directionValues").on("change", getInfo);
 
 function changeDirectionRight(){
     var direction = d3.select('#directionValues').node().value;
@@ -33,8 +89,7 @@ function changeDirectionRight(){
       direction = 'North';}
 
     d3.select('#directionValues').property('value', direction);
-    var url = "/star_data.json/" + direction;
-    d3.json(url, printStarData);
+    getInfo(direction);
 }
 
 function changeDirectionLeft(){
@@ -49,8 +104,7 @@ function changeDirectionLeft(){
       direction = 'North';}
 
     d3.select('#directionValues').property('value', direction);
-    var url = "/star_data.json/" + direction;
-    d3.json(url, printStarData);
+    getInfo(direction);
 }
 
 d3.select(".rarrow").on("click", changeDirectionRight);
@@ -68,7 +122,6 @@ d3.select("#clear").on("click", function (){
 
 function printStarData(starData) {
   // d3 code
-
   if (d3.select('#d3starfield').empty()){
     console.log("empty");
   } else{
@@ -128,8 +181,21 @@ function constellate(constellation_data){
                               .attr("fill", "none");
   }
 
-  d3.select('#v_const').append("text")
-                       .text(visible.join(', '))
+  d3.select('#v_const').append("text").text("Constellations")
+                       .append('ul').selectAll('li')
+                       .data(visible)
+                       .enter().append('li').append('a')
+                       .html(function(d){return d;})
+                       .on("mouseover", function(d){
+                            d3.select('#v_const').append("div").append("img")
+                                        .attr("src", "/static/images/"+d+".jpg")
+                                        .attr("width", "200px")
+                                        .attr("height","200px")
+                                        .attr("x", -8)
+                                        .attr("y", 200);})
+                       .on("mouseout", function() {
+                            d3.select('#v_const').selectAll("div").remove();
+                       });
 }
 
 var svgBodySelection = d3.select("#d3starfield");
@@ -139,12 +205,11 @@ var svgContainer = svgBodySelection.append("svg")
                                    .attr("height", 600)
                                    .style("fill", "white");
 
-var tooltip = d3.select("#d3starfield")
+var tooltip = d3.select(".box")
     .append("div")
     .attr("class", "d3tooltip")
     .style("position", "absolute")
     .style("z-index", "10")
-    .style("visibility", "hidden")
-    .text("a simple tooltip");
+    .style("visibility", "hidden");
 
 console.log('hiya!');

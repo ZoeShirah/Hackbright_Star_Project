@@ -177,7 +177,7 @@ def replace_constellation_name(abbr):
                   'TAU': 'Taurus', 'AUR': 'Auriga', 'HOR': 'Horologium',
                   'CAE': 'Caelum', 'SCL': 'Sculptor', 'CET': 'Cetus',
                   'FOR': 'Fornax', 'PHE': 'Phoenix', 'CAM': 'Camelopardelis',
-                  'ERI': 'Eridanus', 'PEG': 'Pegasus', 'PER': 'Persius',
+                  'ERI': 'Eridanus', 'PEG': 'Pegasus', 'PER': 'Perseus',
                   'PSC': 'Pisces', 'UMA': 'Ursa Major', 'UMI': 'Ursa Minor',
                   'CEP': 'Cepheus', 'CHA': 'Chamaeleon', 'CIR': 'Circinus',
                   'COM': 'Coma Berenices', 'CRA': 'Corona Austrina', 'CRB': 'Corona Borealis',

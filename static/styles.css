@@ -13,7 +13,7 @@ body{
 }
 
 .indented {
-    margin-left:100px;
+    margin-left: 80px;
     margin-bottom: 20px;
 }
 
@@ -42,6 +42,7 @@ body{
 
 .box {
     position: relative;
+    width:900px;
 }
 
 .image {
@@ -90,4 +91,24 @@ body{
 .city {
     width:800px;
     height:40px;
+}
+
+#v_const {
+  width: 200px;
+  height: 600px;
+  left: 810px;
+  top: 0%;
+  position: absolute;
+}
+
+select:disabled {
+  background-color: gray;
+}
+
+button:disabled {
+  background-color: gray;
+}
+
+.click {
+  pointer-events: none;
 }
