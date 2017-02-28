@@ -127,6 +127,7 @@ def logout_process():
 
     if 'user_id' in session:
         del session['user_id']
+        clearSession()
         flash('logged out')
     else:
         flash('not logged in')
@@ -149,13 +150,16 @@ def show_user(user_id):
 
 @app.route("/set_user_location")
 def set_user_location():
+    """get the user's location and add it to the database as their defualt"""
     user_id = session.get("user_id")
     lat = request.args.get("lat")
     lon = request.args.get("lng")
+
     user = User.query.filter_by(user_id=user_id).one()
     user.lat = lat
     user.lon = lon
     db.session.commit()
+
     update_session(lat, lon)
 
     return redirect("/users/"+str(user_id))
@@ -210,12 +214,11 @@ def change_defaults():
     lon = request.args.get("lng")
     date = request.args.get("date")
 
-    if not lat:
-        lat = session.get("d_lat")
-    if not lon:
-        lon = session.get("d_lon")
-
-    update_session(lat, lon)
+    if lat and lon:
+        update_session(lat, lon)
+    else:
+        lat = session.get("d_lat", 37.7887459)
+        lon = session.get("d_lon", -122.41158519999999)
 
     if date:
         dt_utc = c.get_utc_time(date, lat, lon)
@@ -225,7 +228,19 @@ def change_defaults():
 
 
 @app.route('/clear')
+def clear():
+    """Clear the time and location info, if user is logged in reset to thier defaults"""
+
+    clearSession()
+    if 'user_id' in session:
+        user = User.query.filter_by(user_id=session['user_id']).one()
+        update_session(user.lat, user.lon)
+
+    return redirect('/generator')
+
+
 def clearSession():
+    """clear time and location info from the session"""
     if "lat" in session:
         del session["lat"]
         del session["d_lat"]
@@ -234,11 +249,6 @@ def clearSession():
         del session["d_lon"]
     if "time" in session:
         del session["time"]
-    if 'user_id' in session:
-        user = User.query.filter_by(user_id=session['user_id']).one()
-        update_session(user.lat, user.lon)
-
-    return redirect('/generator')
 
 
 def update_session(lat=None, lon=None):

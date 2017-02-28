@@ -143,6 +143,80 @@ class FlaskTestsDatabase(TestCase):
         result = self.client.get("/clear", follow_redirects=True)
         self.assertIn("DateTime: now", result.data)
 
+    def test_replace_session(self):
+        """Test that the info in the session clears but gets replaced with user's defaults"""
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['lat'] = '0.8765'
+                sess['d_lat'] = '-70'
+                sess['lon'] = '-122'
+                sess['d_lon'] = '0.76563'
+                sess['time'] = "20071212T09:35"
+                sess['user_id'] = 2
+
+        result = self.client.get("/clear", follow_redirects=True)
+        self.assertIn("DateTime: now", result.data)
+        self.assertIn("Latitude: 44.00", result.data)
+
+    def test_search_lowercase(self):
+        """Test that search will find a star and redirect to its info page"""
+
+        result = self.client.get("/search?name=polaris", follow_redirects=True)
+        self.assertIn("Ursa Minor", result.data)
+
+    def test_search_id(self):
+        """Test that search will find a star and redirect to its info page"""
+
+        result = self.client.get("/search?name=4", follow_redirects=True)
+        self.assertIn("Betelgeuse", result.data)
+
+    def test_search_name_not_found(self):
+        """Test that search will handle the case where the name is not found"""
+
+        result = self.client.get("/search?name=monkey", follow_redirects=True)
+        self.assertIn("no star with that name", result.data)
+
+    def test_search_number_too_long(self):
+        """Test that search will handle the case where the number is not a valid id"""
+
+        result = self.client.get("/search?name=111111111111111111111111", follow_redirects=True)
+        self.assertIn("please try again", result.data)
+
+    def test_save_a_star(self):
+        """Test that a user can add a star to their profile"""
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = '1'
+        result = self.client.get("/add_to_saved/4", follow_redirects=True)
+        self.assertIn("Star Added!", result.data)
+
+    def test_already_saved(self):
+        """Test that a user can't add a star twice"""
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user_id'] = '1'
+        result = self.client.get("/add_to_saved/3", follow_redirects=True)
+        self.assertIn("You have already saved this star!", result.data)
+
+    def test_change_lat_lon(self):
+        """Test that a user can change the lat/long of the sky generator"""
+
+        result = self.client.get("/change_defaults?lat=39.7392358&lng=-104.990251",
+                                 follow_redirects=True)
+        self.assertIn("Latitude: 39.7392358000&deg;", result.data)
+
+    def test_change_datetime(self):
+        """Test that the user can change the date/time of the sky generator
+
+        assuming default lat/long of Hackbright"""
+
+        result = self.client.get("/change_defaults?date=2017-02-17T14:05",
+                                 follow_redirects=True)
+        self.assertIn("DateTime in UTC: 2017-02-17 22:05:00+00:00", result.data)
+
 
 class FlaskTestsLoggedIn(TestCase):
     """Flask tests with user logged in to session."""
@@ -169,6 +243,7 @@ class FlaskTestsLoggedIn(TestCase):
 
         result = self.client.get("/register", follow_redirects=True)
         self.assertIn("already", result.data)
+
 
 # class FlaskTestsLoggedOut(TestCase):
 #     """Flask tests with user logged in to session."""

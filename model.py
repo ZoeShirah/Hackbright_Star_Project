@@ -96,10 +96,10 @@ def example_data():
     Zoe = User(username="ZoeShirah", password="stars", email="zoe@zoe.com")
     Louise = User(username="Louise", password="sky", email="lulu@lu.com", lat=44, lon=-74)
 
-    uStar = UserStar(ustar_id=1, user_id=1, star_id=3)
+    uStar = UserStar(user_id=1, star_id=3)
 
     c1 = Constellation(const_id=1, name="ORI")
-    c2 = Constellation(const_id=2, name="URI")
+    c2 = Constellation(const_id=2, name="UMI")
 
     line1 = Const_Line(line_id=1, startpoint=4, endpoint=1, const=1)
     line2 = Const_Line(line_id=2, startpoint=3, endpoint=2, const=2)
