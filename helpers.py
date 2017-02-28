@@ -27,8 +27,6 @@ def get_star_info(star_id):
     try:
         star = Star.query.filter_by(star_id=star_id).one()
         consts = g.get_list_of_constellations(star_id)
-        for i in range(len(consts)):
-            consts[i] = c.replace_constellation_name(consts[i])
     except NoResultFound:
         star = None
         consts = []

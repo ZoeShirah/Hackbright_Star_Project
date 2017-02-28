@@ -84,7 +84,7 @@ body{
 
 .skyline {
   position: absolute;
-  top: 94%;
+  top: 93.5%;
   width:800px;
 }
 
@@ -111,4 +111,8 @@ button:disabled {
 
 .click {
   pointer-events: none;
+}
+
+.hidden {
+  display: none;
 }

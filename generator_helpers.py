@@ -56,6 +56,7 @@ def get_list_of_constellations(star_id):
         const_set = set()
         for const in consts:
             name = const.constellation.name
+            name = c.replace_constellation_name(name)
             const_set.add(name)
         return list(set(const_set))
     else:

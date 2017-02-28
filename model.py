@@ -93,8 +93,8 @@ def example_data():
     S4 = Star(star_id=4, ra=5.91952477, dec=07.40703634, name="Betelgeuse",
               distance=131.061598951507, magnitude=0.45, color_index=1.500)
 
-    Zoe = User(user_id=1, username="ZoeShirah", password="stars", email="zoe@zoe.com")
-    Louise = User(user_id=2, username="Louise", password="sky", email="lulu@lu.com")
+    Zoe = User(username="ZoeShirah", password="stars", email="zoe@zoe.com")
+    Louise = User(username="Louise", password="sky", email="lulu@lu.com", lat=44, lon=-74)
 
     uStar = UserStar(ustar_id=1, user_id=1, star_id=3)
 

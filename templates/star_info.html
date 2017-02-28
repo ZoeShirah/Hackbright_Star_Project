@@ -12,7 +12,7 @@
         <h3>Proper Name:</h3> {{ star.name}}
     {% endif %}
     {% if constellations | default("False", true) != "False" %}
-        <h3>Constellation:</h3> {{ constellations }}
+        <h3>Constellation:</h3> {{ constellations|join(', ') }}
     {% endif %}
     <h3>Right Ascension:</h3> {{ star.ra }} hrs
 

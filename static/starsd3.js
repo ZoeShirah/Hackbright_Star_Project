@@ -10,7 +10,8 @@ var EastConsts = null;
 var WestConsts = null;
 
 
-$( document ).ready(function() { console.log("ready");
+$( document ).ready(function() { 
+  console.log("ready");
   getDirection();
   setInfo();
 });
@@ -38,29 +39,38 @@ function getDirection(){
     d3.json(url, printStarData);   
 }
 
+
+// activates direction changing after all directions have loaded
 function activateMenu(){
   $('#directionValues').removeAttr('disabled');
-  $('.arrow').removeClass('click')
+  $('.arrow').removeClass('click');
+  $('#otherParams').removeClass('hidden');
+  $('#paramReset').removeClass('hidden');
+
   console.log("go");
 }
 
+
+// activates constellation button after constellations have loaded
 function activateButton(){
-  $('.const').removeAttr('disabled');
+  $('.const').removeAttr('disabled').removeClass('hidden');
   console.log("constellations activated");
 }
 
+// preload all the directional and constellation data, set it to variables
 function setInfo(){
   d3.json("/star_data.json/North", function(data){NorthInfo=data;});
   d3.json("/star_data.json/East", function(data){EastInfo=data;});
   d3.json("/star_data.json/South", function(data){SouthInfo=data;});
-  d3.json("/star_data.json/West", function(data){WestInfo=data; activateMenu();});
+  d3.json("/star_data.json/West", function(data){WestInfo=data; setTimeout(activateMenu, 2000);});
   d3.json("/constellation_data.json/North", function(data){NorthConsts=data;});
   d3.json("/constellation_data.json/East", function(data){EastConsts=data;});
   d3.json("/constellation_data.json/South", function(data){SouthConsts=data;});
-  d3.json("/constellation_data.json/West", function(data){WestConsts=data; activateButton();});
+  d3.json("/constellation_data.json/West", function(data){WestConsts=data; setTimeout(activateButton, 1000);});
   console.log("set");
 }
 
+// get direction from the menu and display those stars
 function getInfo(){
   var direction = d3.select('#directionValues').node().value;
   if (direction === 'North'){
@@ -77,6 +87,7 @@ function getInfo(){
 
 d3.select("#directionValues").on("change", getInfo);
 
+// get direction value from menu and reset menu and stars to the next direction to the right
 function changeDirectionRight(){
     var direction = d3.select('#directionValues').node().value;
     if (direction === 'North'){
@@ -92,6 +103,7 @@ function changeDirectionRight(){
     getInfo(direction);
 }
 
+// get direction value from menu and reset menu and stars to the next direction to the left
 function changeDirectionLeft(){
     var direction = d3.select('#directionValues').node().value;
     if (direction === 'North'){
@@ -111,6 +123,7 @@ d3.select(".rarrow").on("click", changeDirectionRight);
 
 d3.select(".larrow").on("click", changeDirectionLeft);
 
+// if the clear button is clicked clear all constellation data
 d3.select("#clear").on("click", function (){
   if (d3.select('#d3starfield').empty()){
     console.log("empty");
@@ -120,6 +133,7 @@ d3.select("#clear").on("click", function (){
   }
 });
 
+// print out stars to the screen
 function printStarData(starData) {
   // d3 code
   if (d3.select('#d3starfield').empty()){
@@ -149,7 +163,7 @@ function printStarData(starData) {
                               tooltip.text(d.name);};
                             if (d.hasOwnProperty("constellations")){
                                 tooltip.append("html").html("<p>");
-                                tooltip.append("text").text("Constellation: "+d.constellations.join(", "));
+                                tooltip.append("text").text(d.constellations.join(", "));
                                 tooltip.append("html").html("</p>");};
                           return tooltip.style("visibility", "visible");
                           })
@@ -190,7 +204,7 @@ function constellate(constellation_data){
                             d3.select('#v_const').append("div").append("img")
                                         .attr("src", "/static/images/"+d+".jpg")
                                         .attr("width", "200px")
-                                        .attr("height","200px")
+                                        // .attr("height","200px")
                                         .attr("x", -8)
                                         .attr("y", 200);})
                        .on("mouseout", function() {

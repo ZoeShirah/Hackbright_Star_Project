@@ -11,8 +11,8 @@
         <option value="West">West</option>
     </select>&emsp;&emsp;
 </form>
-<button type="button" class="const" id="constellations" disabled>Constellations</button>
-<button type="button" class="const" id="clear" disabled>Clear</button>
+<button type="button" class="const hidden" id="constellations" disabled>Constellations</button>
+<button type="button" class="const hidden" id="clear" disabled>Clear</button>
 <div class="box indented">
     <div id='d3starfield'></div>
     <div class='rarrow arrow click'>
@@ -22,7 +22,7 @@
         <img src='/static/left-arrow.png' alt="arrow" class="image">
     </div>
     <div class="skyline">
-        <img src='/static/horizon.png' alt="horizon" class="city">
+        <img src='/static/skyline.png' alt="horizon" class="city">
     </div>
     <div id="v_const"></div>
 </div>
@@ -42,7 +42,7 @@
 {% endif %}
 </p>
 <!-- adjusting time and location -->
-<form action="/change_defaults" class="indented" id="otherParams">
+<form action="/change_defaults" class="indented hidden" id="otherParams" >
     Enter a Location to autofill latitude and longitude:&emsp; <input id="geocomplete" type="text" placeholder="Type in an address" value="Hackbright Academy">
       <fieldset>
         <label for="lat">Latitude:</label>&emsp;
@@ -54,7 +54,7 @@
     <input type="datetime-local" step="any" name="date">
     <input type="submit" value="Submit">
 </form>
-<form action="/clear" class="indented">
+<form action="/clear" class="indented hidden" id="paramReset">
     <input type="submit" id="reset" value="Reset Time and Location">
 </form>
 <!-- scripts -->

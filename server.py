@@ -152,12 +152,10 @@ def set_user_location():
     user_id = session.get("user_id")
     lat = request.args.get("lat")
     lon = request.args.get("lng")
-
     user = User.query.filter_by(user_id=user_id).one()
     user.lat = lat
     user.lon = lon
     db.session.commit()
-
     update_session(lat, lon)
 
     return redirect("/users/"+str(user_id))
@@ -254,7 +252,7 @@ def update_session(lat=None, lon=None):
         session["lon"] = r_lon
         session["d_lon"] = float(lon)
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
     app.debug = True

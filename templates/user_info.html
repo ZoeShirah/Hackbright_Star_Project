@@ -8,6 +8,7 @@
 <h3>username:</h3> {{ user.username }}
 
 <h3>e-mail:</h3> {{ user.email }}
+{% if 'user_id' in session %}
 {% if (user.lat | default("False", true) != "False") %}
 <h3>your location:</h3> {{ user.lat }}, {{ user.lon }}
 {% endif%}
@@ -23,7 +24,7 @@
       </fieldset>
     <input type="submit">
 </form>
-
+{% endif %}
 {% if stars | length > 0 %}
 <h3>Saved Stars:</h3>
 <ul>    
