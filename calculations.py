@@ -41,7 +41,7 @@ def convert_degrees_to_radians(decimaldegree):
     Decimal('-2.136621868841980316338232946')
 
     """
-    return Decimal(decimaldegree)*Decimal(math.pi/180)
+    return float(Decimal(decimaldegree)*Decimal(math.pi/180))
 
 
 def get_current_altAz(ra, dec, lon=-2.1366218688, lat=0.65929689448, time=datetime.utcnow()):
@@ -199,6 +199,7 @@ def replace_constellation_name(abbr):
     fullname = conversion[abbr]
 
     return fullname
+
 
 if __name__ == "__main__":
     import doctest

@@ -3,6 +3,7 @@ from datetime import datetime
 from flask import session
 from model import Star, Const_Line, Constellation
 from sqlalchemy import or_
+import ephem
 
 
 def get_altaz(star):
@@ -51,14 +52,14 @@ def create_list_of_stars(direction):
 
 def get_list_of_constellations(star_id):
     """Get a list of constellations a particular star is in"""
-    consts = Const_Line.query.filter(or_(Const_Line.startpoint == star_id, Const_Line.endpoint == star_id)).all()
-    if consts:
-        const_set = set()
-        for const in consts:
-            name = const.constellation.name
+    lines = Const_Line.query.filter(or_(Const_Line.startpoint == star_id, Const_Line.endpoint == star_id)).all()
+    if lines:
+        consts = set()
+        for line in lines:
+            name = line.constellation.name
             name = c.replace_constellation_name(name)
-            const_set.add(name)
-        return list(set(const_set))
+            consts.add(name)
+        return list(set(consts))
     else:
         return []
 
@@ -123,3 +124,44 @@ def create_list_of_constellations(star_list, direction):
                           "lines": lines}
 
     return constellation_info
+
+
+def get_planet_info(date, lat, lon, direction):
+    """Get info about planets visible at a time and location, return a list of dictionaries"""
+
+    observer = ephem.Observer()
+    observer.lat = lat
+    observer.lon = lon
+    observer.date = date
+
+    mercury = {"name": "Mercury", "info": ephem.Mercury(), "color": "##ffe5bf"}
+    venus = {"name": "Venus", "info": ephem.Venus(), "color": "white"}
+    moon = {"name": "Moon", "info": ephem.Moon(), "color": "#fffcf9"}
+    mars = {"name": "Mars", "info": ephem.Mars(), "color": "#ffd1ba"}
+    jupiter = {"name": "Jupiter", "info": ephem.Jupiter(), "color": "#fff6e0"}
+    saturn = {"name": "Saturn", "info": ephem.Saturn(), "color": "#fcd9b0"}
+    uranus = {"name": "Uranus", "info": ephem.Uranus(), "color": "#d4fcd6"}
+    neptune = {"name": "Neptune", "info": ephem.Neptune(), "color": "#bad4ff"}
+
+    planets = [mercury, venus, moon, mars, jupiter, saturn, uranus, neptune]
+
+    planet_info = []
+    for planet in planets:
+        planet['info'].compute(observer)
+        print planet['info'].alt, planet['info'].az, repr(planet['info'].alt)
+        planet['alt'] = planet['info'].alt
+        planet['az'] = planet['info'].az
+        print planet['alt'], planet['az']
+        visible = c.get_visible_window(planet['alt'], planet['az'])
+        print visible
+        if direction in visible:
+            if planet['info'].mag > 5:
+                continue
+            coords = c.convert_sky_to_pixel(planet['alt'], planet['az'], direction)
+            planet.update(coords)
+            planet['magnitude'] = planet['info'].mag
+            planet['constellation'] = ephem.constellation(planet['info'])[1]
+            planet.pop('info', None)
+            planet_info.append(planet)
+
+    return planet_info

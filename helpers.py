@@ -1,4 +1,3 @@
-import calculations as c
 from model import Star, User, UserStar, db
 from sqlalchemy.orm.exc import NoResultFound
 import generator_helpers as g

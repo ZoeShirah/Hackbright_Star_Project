@@ -13,6 +13,7 @@ setInfo();
 $( document ).ready(function() { 
   console.log("ready");
   getDirection();
+  getPlanets();
 });
 
 function getConstellations(){
@@ -36,9 +37,16 @@ function getDirection(){
     var direction = d3.select('#directionValues').node().value;
     var url = "/star_data.json/" + direction;
     d3.json(url, printStarData);   
-    setTimeout(activateMenu, 2000);
+    setTimeout(activateMenu, 3000);
 }
 
+function getPlanets(){
+
+    var direction = d3.select('#directionValues').node().value;
+    console.log(direction)
+    var url = "/planet_data.json/" + direction;
+    d3.json(url, printPlanetData);   
+}
 
 // activates direction changing after all directions have loaded
 function activateMenu(){
@@ -75,12 +83,16 @@ function getInfo(){
   var direction = d3.select('#directionValues').node().value;
   if (direction === 'North'){
     printStarData(NorthInfo);
+    getPlanets();
   } else if (direction === 'East'){
     printStarData(EastInfo);
+      getPlanets();
   } else if (direction === 'South'){
     printStarData(SouthInfo);
+      getPlanets();
   }else if (direction === 'West'){
     printStarData(WestInfo);
+      getPlanets();
   }
 }
 
@@ -100,7 +112,7 @@ function changeDirectionRight(){
       direction = 'North';}
 
     d3.select('#directionValues').property('value', direction);
-    getInfo(direction);
+    getInfo();
 }
 
 // get direction value from menu and reset menu and stars to the next direction to the left
@@ -151,10 +163,10 @@ function printStarData(starData) {
                             .append('circle');
 
     var starAttributes = stars
-                        .attr('cx', function(d) {return d.x})
-                        .attr('cy', function(d) {return d.y})
-                        .attr('r', function(d) {return 5-d.magnitude})
-                        .attr("fill", function(d) {return d.color})
+                        .attr('cx', function(d) {return d.x;})
+                        .attr('cy', function(d) {return d.y;})
+                        .attr('r', function(d) {return 5-d.magnitude;})
+                        .attr("fill", function(d) {return d.color;})
                         .on('click', function(d) {
                           console.log('id '+ d.id);})
                         .on('mouseover', function(d){
@@ -165,6 +177,35 @@ function printStarData(starData) {
                                 tooltip.append("html").html("<p>");
                                 tooltip.append("text").text(d.constellations.join(", "));
                                 tooltip.append("html").html("</p>");};
+                          return tooltip.style("visibility", "visible");
+                          })
+                        .on("mousemove", function(){
+                          return tooltip.style("top", (d3.event.pageY-200)+"px")
+                                        .style("left",(d3.event.pageX-80)+"px");
+                          })
+                        .on("mouseout", function(){
+                          return tooltip.style("visibility", "hidden");
+                          });
+}
+
+
+function printPlanetData(planetData) {
+
+    console.log(planetData);
+
+    var planets = svgContainer.selectAll("circle.planet")
+                            .data(planetData, function(d){ return d;})
+                            .enter()
+                            .append("circle")
+                            .attr("class", "planet");
+
+    var planetAttributes = planets
+                        .attr('cx', function(d) {return d.x;})
+                        .attr('cy', function(d) {return d.y;})
+                        .attr('r', function(d) {return 5-d.magnitude;})
+                        .attr("fill", function(d){return d.color;})
+                        .on('mouseover', function(d){
+                              tooltip.text(d.name);
                           return tooltip.style("visibility", "visible");
                           })
                         .on("mousemove", function(){

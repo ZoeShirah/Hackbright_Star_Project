@@ -1,12 +1,12 @@
 appdirs==1.4.0
 blinker==1.4
+coverage==4.3.4
+ephem==3.7.6.0
 Flask==0.9
 Flask-DebugToolbar==0.10.0
 Flask-SQLAlchemy==0.16
 Flask-WTF==0.8
-googlemaps==2.4.5
 infinity==1.4
-intervals==0.8.0
 itsdangerous==0.24
 Jinja2==2.6
 packaging==16.8

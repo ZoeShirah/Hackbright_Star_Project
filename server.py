@@ -1,5 +1,6 @@
 """Stars"""
 
+from datetime import datetime
 import os
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
@@ -8,7 +9,7 @@ import json
 from model import Star, User, connect_to_db, db
 #helper files
 import calculations as c
-from generator_helpers import create_list_of_stars, create_list_of_constellations
+from generator_helpers import create_list_of_stars, create_list_of_constellations, get_planet_info
 from helpers import get_star_info, make_user, get_userStar_dict
 from helpers import find_star, validate_login, save_a_star
 
@@ -191,6 +192,20 @@ def create_constellation_json(direction):
     constellation_data = create_list_of_constellations(star_data, direction)
 
     return json.dumps(constellation_data)
+
+
+@app.route('/planet_data.json/<direction>')
+def create_planet_json(direction):
+    """ Take the user selected direction and returns visible planets."""
+
+    print direction
+    lat = session.get("d_lat", 37.7887459)
+    lon = session.get("d_lon", -122.41158519999999)
+    time = session.get("time", datetime.utcnow())
+
+    planet_data = get_planet_info(time, lat, lon, direction)
+    print planet_data
+    return json.dumps(planet_data)
 
 
 @app.route('/search')
