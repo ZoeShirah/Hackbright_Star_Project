@@ -32,10 +32,15 @@
     <li>
         <a href="/stars/{{ key }}">{{ key }}</a> 
         {% if 'name' in value %}
-            {{ value['name'] }}
+            {{ value['name'] }} 
+            {% if 'visible' in value %}
+                - Visible now: {{ value['visible'] | join(', ') }}
+            {% endif %}
         {% else %}
-            at ra: {{ '%.4f' | format(value['ra']) }} 
-            dec: {{ '%.4f' | format(value['dec']) }}
+            at (ra: {{ '%.4f' | format(value['ra']) }}, dec: {{ '%.4f' | format(value['dec']) }})
+            {% if 'visible' in value %}
+                - Visible now: {{ value['visible'] | join(', ') }}
+            {% endif %}
         {% endif %}
     </li>
 {% endfor %}

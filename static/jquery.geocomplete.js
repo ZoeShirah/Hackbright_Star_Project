@@ -596,7 +596,7 @@
 
 $(function(){
         $("#geocomplete").geocomplete({
-          details: "form",
+          details: "#otherParams",
           types: ["geocode", "establishment"],
         });
       });

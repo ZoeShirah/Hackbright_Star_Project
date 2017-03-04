@@ -1,6 +1,8 @@
 from model import Star, User, UserStar, db
 from sqlalchemy.orm.exc import NoResultFound
 import generator_helpers as g
+import calculations as c
+from flask import session
 
 
 def make_user(username, password, email):
@@ -21,10 +23,13 @@ def make_user(username, password, email):
 
 
 def get_star_info(star_id):
-    """query the database for info about a star and which constellations its in"""
+    """query the database for info about a star and any constellations it is in"""
 
     try:
         star = Star.query.filter_by(star_id=star_id).one()
+        altAz = g.get_altaz(star)
+        visible = c.get_visible_window(altAz.alt, altAz.az)
+        star = {'star': star, 'visible': visible}
         consts = g.get_list_of_constellations(star_id)
     except NoResultFound:
         star = None
@@ -44,6 +49,9 @@ def get_userStar_dict(user_id):
         if UStar.name.strip():
             star_name = UStar.name
             star_dict[UStar.star_id].update({'name': star_name})
+            altAz = g.get_altaz(UStar)
+        visible = c.get_visible_window(altAz.alt, altAz.az)
+        star_dict[UStar.star_id].update({'visible': visible})
     return star_dict
 
 

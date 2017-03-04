@@ -198,13 +198,11 @@ def create_constellation_json(direction):
 def create_planet_json(direction):
     """ Take the user selected direction and returns visible planets."""
 
-    print direction
     lat = session.get("d_lat", 37.7887459)
     lon = session.get("d_lon", -122.41158519999999)
     time = session.get("time", datetime.utcnow())
 
     planet_data = get_planet_info(time, lat, lon, direction)
-    print planet_data
     return json.dumps(planet_data)
 
 

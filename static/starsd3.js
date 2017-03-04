@@ -10,7 +10,7 @@ var EastConsts = null;
 var WestConsts = null;
 
 setInfo();
-$( document ).ready(function() { 
+$( document ).ready(function() {
   console.log("ready");
   getDirection();
   getPlanets();
@@ -48,6 +48,16 @@ function getPlanets(){
     d3.json(url, printPlanetData);   
 }
 
+function deactivateMenu(){
+  $('#directionValues').attr('disabled', true);
+  $('.arrow').addClass('click');
+  $('#otherParams').addClass('hidden');
+  $('#paramReset').addClass('hidden');
+
+  console.log("wait");
+}
+
+
 // activates direction changing after all directions have loaded
 function activateMenu(){
   $('#directionValues').removeAttr('disabled');
@@ -67,6 +77,7 @@ function activateButton(){
 
 // preload all the directional and constellation data, set it to variables
 function setInfo(){
+  deactivateMenu();
   d3.json("/star_data.json/North", function(data){NorthInfo=data;});
   d3.json("/star_data.json/East", function(data){EastInfo=data;});
   d3.json("/star_data.json/South", function(data){SouthInfo=data;});
@@ -74,7 +85,7 @@ function setInfo(){
   d3.json("/constellation_data.json/North", function(data){NorthConsts=data;});
   d3.json("/constellation_data.json/East", function(data){EastConsts=data;});
   d3.json("/constellation_data.json/South", function(data){SouthConsts=data;});
-  d3.json("/constellation_data.json/West", function(data){WestConsts=data; setTimeout(activateButton, 1000);});
+  d3.json("/constellation_data.json/West", function(data){WestConsts=data; setTimeout(activateButton, 2000);});
   console.log("set");
 }
 

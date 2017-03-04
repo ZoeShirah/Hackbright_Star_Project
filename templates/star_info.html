@@ -6,28 +6,31 @@
     <br><br>
     <h2>There are no stars in this database with that ID, please try again</h2>
 {% else %}
-    <h2>Info for Star {{ star.star_id }}</h2>
-
-    {% if (star.name | default("False", true) != "False") %}
-        <h3>Proper Name:</h3> {{ star.name}}
+    <h2>Info for Star {{ star['star'].star_id }}</h2>
+    {% if star['visible'] | length > 0 %}
+        <h4>Visible now: {{ star['visible']|join(', ') }}</h4>
+    {% endif %}
+    {% if (star['star'].name | default("False", true) != "False") %}
+        <h3>Proper Name:</h3> {{ star['star'].name}}
     {% endif %}
     {% if constellations | default("False", true) != "False" %}
         <h3>Constellation:</h3> {{ constellations|join(', ') }}
     {% endif %}
-    <h3>Right Ascension:</h3> {{ star.ra }} hrs
+    <h3>Right Ascension:</h3> {{ star['star'].ra }} hrs
 
-    <h3>Declination:</h3> {{ star.dec }}&deg;
+    <h3>Declination:</h3> {{ star['star'].dec }}&deg;
 
-    <h3>Distance from Earth:</h3> {{ star.distance }} pc
+    <h3>Distance from Earth:</h3> {{ star['star'].distance }} pc
 
-    <h3>Magnitude:</h3> {{ star.magnitude }}
+    <h3>Magnitude:</h3> {{ star['star'].magnitude }}
 
-    <h3>Color Index:</h3>{{ star.color_index }}
+    <h3>Color Index:</h3>{{ star['star'].color_index }}
+
 
     {% if 'user_id' in session %}
     <div id='saveStarInfo' class = "saveStar">
         <h3>Add Star To Saved List: </h3>
-        <button id="addStar" value='{{ star.star_id }}'>add</button>
+        <button id="addStar" value='{{ star['star'].star_id }}'>add</button>
         <div id='message'></div>
     </div>
     {% endif %}
