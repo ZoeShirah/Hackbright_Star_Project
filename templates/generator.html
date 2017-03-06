@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Sky{% endblock %}
 {% block content %}
-<h2>Star View</h2>
+<h2>Bowl Full of Stars</h2>
 <form id="direction">
     Select a direction:
     <select id="directionValues">
@@ -62,4 +62,10 @@
 <script src='/static/starsd3.js'></script>
 <script src="http://maps.googleapis.com/maps/api/js?key={{ secret }}&libraries=places"></script>
 <script src="static/jquery.geocomplete.js"></script>
+<script src="static/jquery.bootstrap-autohidingnavbar.js"></script>
+<script>
+jQuery(function($) {
+$("navbar-default").autoHidingNavbar();
+});
+</script>
 {% endblock %}

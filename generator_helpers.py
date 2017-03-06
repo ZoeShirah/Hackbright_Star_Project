@@ -134,6 +134,7 @@ def get_planet_info(date, lat, lon, direction):
     observer.lon = lon
     observer.date = date
 
+    sun = {"name": "Sun", "info": ephem.Sun(), "color": "#ffffcc"}
     mercury = {"name": "Mercury", "info": ephem.Mercury(), "color": "##ffe5bf"}
     venus = {"name": "Venus", "info": ephem.Venus(), "color": "white"}
     moon = {"name": "Moon", "info": ephem.Moon(), "color": "#fffcf9"}
@@ -143,7 +144,7 @@ def get_planet_info(date, lat, lon, direction):
     uranus = {"name": "Uranus", "info": ephem.Uranus(), "color": "#d4fcd6"}
     neptune = {"name": "Neptune", "info": ephem.Neptune(), "color": "#bad4ff"}
 
-    planets = [mercury, venus, moon, mars, jupiter, saturn, uranus, neptune]
+    planets = [sun, mercury, venus, moon, mars, jupiter, saturn, uranus, neptune]
 
     planet_info = []
     for planet in planets:

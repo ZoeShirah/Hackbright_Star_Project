@@ -256,7 +256,6 @@ function constellate(constellation_data){
                             d3.select('#v_const').append("div").append("img")
                                         .attr("src", "/static/images/"+d+".jpg")
                                         .attr("width", "200px")
-                                        // .attr("height","200px")
                                         .attr("x", -8)
                                         .attr("y", 200);})
                        .on("mouseout", function() {

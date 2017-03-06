@@ -3,13 +3,17 @@ body{
 }
 
 .navbar-default{
-    margin-left: -20px;
+  margin-left: -20px;
 }
 
 #d3starfield {
-    background: linear-gradient( 0deg, #488AC7, #0000A0, #000080);
-    width: 800px;
-    height: 600px;
+  border-radius: 40px 40px 0 0;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: black;
+  background: linear-gradient( 0deg, #488AC7, #0000A0, #000080);
+  width: 800px;
+  height: 600px;
 }
 
 #directionValues {
@@ -25,8 +29,8 @@ body{
 }
 
 .indented {
-    margin-left: 80px;
-    margin-bottom: 20px;
+  margin-left: 80px;
+  margin-bottom: 20px;
 }
 
 #direction {
@@ -111,10 +115,11 @@ body{
   left: 810px;
   top: 0%;
   position: absolute;
+  font-size: 15px;
 }
 
 select:disabled {
-  background-color: gray;
+  color: gray;
 }
 
 button:disabled {
@@ -127,4 +132,31 @@ button:disabled {
 
 .hidden {
   display: none;
+}
+
+body {
+  background-size: cover;
+  background-image: url("forest (2).jpeg");
+  background-repeat: no-repeat;
+  color:white;
+
+}
+
+nav{
+  color: white;
+  background-color: black;
+  opacity:0.8;
+
+}
+
+button {
+  background-color: black;
+}
+
+select {
+  background-color: black;
+}
+
+input {
+  background-color: black;
 }
