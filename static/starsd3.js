@@ -37,7 +37,7 @@ function getDirection(){
     var direction = d3.select('#directionValues').node().value;
     var url = "/star_data.json/" + direction;
     d3.json(url, printStarData);   
-    setTimeout(activateMenu, 3000);
+    setTimeout(activateMenu, 5000);
 }
 
 function getPlanets(){
@@ -51,9 +51,8 @@ function getPlanets(){
 function deactivateMenu(){
   $('#directionValues').attr('disabled', true);
   $('.arrow').addClass('click');
-  $('#otherParams').addClass('hidden');
-  $('#paramReset').addClass('hidden');
-
+  $('.twoforms').addClass('hidden');
+ 
   console.log("wait");
 }
 
@@ -62,9 +61,8 @@ function deactivateMenu(){
 function activateMenu(){
   $('#directionValues').removeAttr('disabled');
   $('.arrow').removeClass('click');
-  $('#otherParams').removeClass('hidden');
-  $('#paramReset').removeClass('hidden');
-
+  $('.twoforms').removeClass('hidden');
+  
   console.log("go");
 }
 
@@ -242,13 +240,13 @@ function constellate(constellation_data){
 
     var lineGraph = svgContainer.append("path")
                               .attr("d", lineFunction(lineData))
-                              .attr("stroke", "yellow")
+                              .attr("stroke", "#fff1b7")
                               .attr("stroke-width", 1)
                               .attr("fill", "none");
   }
 
-  d3.select('#v_const').append("text").text("Constellations")
-                       .append('ul').selectAll('li')
+  d3.select('#v_const').append("text").text("Constellations").style("font-family","'Tangerine', 'cursive'").style('font-size', '40px')
+                       .append('ul').style("font-family","sans-serif").style('font-size', '18px').selectAll('li')
                        .data(visible)
                        .enter().append('li').append('a')
                        .html(function(d){return d;})

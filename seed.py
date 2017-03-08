@@ -95,7 +95,7 @@ def load_constellations():
         except NoResultFound:
             try:
                 star = Star.query.filter(func.abs(Star.ra - ra) < 0.015, func.abs(Star.dec - dec) < 0.015).one()
-            except(NoResultFound, MultipleResultsFound):
+            except (NoResultFound, MultipleResultsFound):
                 count = count + 1
                 print "******No Results*******", count, constname, starname  # see how many stars were skipped
                 continue

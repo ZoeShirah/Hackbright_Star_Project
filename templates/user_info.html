@@ -34,7 +34,7 @@
         {% if 'name' in value %}
             {{ value['name'] }} 
             {% if 'visible' in value %}
-                - Visible now: {{ value['visible'] | join(', ') }}
+                -> Visible now: {{ value['visible'] | join(', ') }}
             {% endif %}
         {% else %}
             at (ra: {{ '%.4f' | format(value['ra']) }}, dec: {{ '%.4f' | format(value['dec']) }})

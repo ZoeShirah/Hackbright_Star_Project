@@ -1,13 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}Homepage{% endblock %}
 {% block nav_homepage %}active{% endblock %}
-<div id="home-body">
-{% block content %}
-<div id="home-body">
-<img src="http://www.publicdomainpictures.net/pictures/130000/velka/starry-night-background.jpg" alt="night sky" height="70" width="70">
-<h2>Bowl Full of Stars</h2>
-<!-- <h7>observe the celestial nighttide</h7> -->
-<a href="/generator"><h4>Generate Star Map</h4></a>
 
+{% block content %}
+<div id="homepage">
+<h2>Bowl Full of Stars</h2>
+<a href="/generator"><u><h3 style="font-weight: bolder">Generate Star Map</h3></u></a></div>
+<img id="homeimage" src="/static/chart.jpg"></div>
 {% endblock %}
-</div>
+<!-- <h7>observe the celestial nighttide</h7> -->

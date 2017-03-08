@@ -1,5 +1,11 @@
 body{
-    padding-left: 20px;
+  padding-left: 20px;
+  background-size: cover;
+  background-image: url("nighttrees.jpg");
+  background-repeat: no-repeat;
+  background-color: black;
+  color: white;
+  width: 100%;
 }
 
 .navbar-default{
@@ -7,13 +13,16 @@ body{
 }
 
 #d3starfield {
-  border-radius: 40px 40px 0 0;
-  border-width: 1px;
-  border-style: dotted;
-  border-color: black;
-  background: linear-gradient( 0deg, #488AC7, #0000A0, #000080);
+  border-radius: 40px 40px 5px 5px;
+  /*border-width: 5px;
+  border-style: solid;
+  border-color: rgba(128,128,128,0.5);*/
+  background: linear-gradient( 0deg, #21466e, #10243c, #010e1d);
+/*  background: linear-gradient( 0deg, #293196, #0c0f54, #020417);*/
+/*  background: linear-gradient( 0deg, #488AC7, #0000A0, #000080);*/
   width: 800px;
   height: 600px;
+  box-shadow: 8px 11px 18px 2px black;
 }
 
 #directionValues {
@@ -57,8 +66,11 @@ body{
 }
 
 .box {
-    position: relative;
-    width:900px;
+  position: relative;
+/*  width:900px;*/
+/*  border-width: 5px;
+  border-style: solid;*/
+ /* background-color: rgba(128,128,128,0.5);*/
 }
 
 .image {
@@ -115,7 +127,7 @@ body{
   left: 810px;
   top: 0%;
   position: absolute;
-  font-size: 15px;
+  font-size: 18px;
 }
 
 select:disabled {
@@ -134,29 +146,99 @@ button:disabled {
   display: none;
 }
 
-body {
-  background-size: cover;
-  background-image: url("forest (2).jpeg");
-  background-repeat: no-repeat;
-  color:white;
 
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+color: #5488d8;  /*Sets the text hover color on navbar*/
 }
 
-nav{
+.navbar-default {
   color: white;
+  background-image: url("nighttrees1.jpg");
   background-color: black;
+  border-color: black;
   opacity:0.8;
-
+  border-color: black;
 }
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+  background-color: white;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active >   
+ a:hover, .navbar-default .navbar-nav > .active > a:focus {
+color: white; 
+background: #5488d8;
+font-weight: bold;
+}
+
+.navbar-default .navbar-nav > li > a {
+   color: white; /*Change active text color here*/
+    }
 
 button {
   background-color: black;
+  color: white;
 }
 
 select {
+  background-color: rgba(0,0,0,0.2);
+}
+
+option {
   background-color: black;
 }
 
 input {
-  background-color: black;
+  background-color: rgba(0,0,0,0.2) !important;
+  color: white !important;
+}
+
+.twoforms {
+  border-width: 1px;
+  border-style: dotted;
+  border-color: white;
+  padding: 10px;
+  width: 800px;
+}
+
+#homeimage {
+  width:auto;
+  position: absolute;
+  margin-top: 2%;
+  margin-left:12%;
+  margin-right: auto;
+  opacity:0.2;
+/*  background-repeat: no-repeat;
+  background-image: url(chart.jpg);*/
+/*  color:black;
+  text-align: center;*/
+  z-index: 0;
+}
+
+#homepage {
+  position:absolute;
+  margin-left: 7%;
+  margin-top: 5%;
+  z-index: 10;
+}
+
+h2{
+/*font-family: 'Great Vibes', cursive;*/
+font-family: 'Tangerine', cursive;
+font-size:55px;
+/*font-family: 'Pinyon Script', cursive;
+font-family: 'Petit Formal Script', cursive;
+font-family: 'Italianno', cursive;
+font-family: 'Herr Von Muellerhoff', cursive;
+font-family: 'Meddon', cursive;*/
+}
+h3.cursive {
+  font-family: 'Tangerine', cursive;
+  font-size:35px;
+}
+
+.black {
+  background: rgba(0,0,0,0.3);
+  color: white;
 }

@@ -1,5 +1,5 @@
 from model import Star, User, UserStar, db
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 import generator_helpers as g
 import calculations as c
 from flask import session
@@ -51,7 +51,8 @@ def get_userStar_dict(user_id):
             star_dict[UStar.star_id].update({'name': star_name})
             altAz = g.get_altaz(UStar)
         visible = c.get_visible_window(altAz.alt, altAz.az)
-        star_dict[UStar.star_id].update({'visible': visible})
+        if visible:
+            star_dict[UStar.star_id].update({'visible': visible})
     return star_dict
 
 
@@ -70,7 +71,7 @@ def find_star(term):
         try:
             star = Star.query.filter_by(name=search_star).one()
             return "/stars/" + str(star.star_id)
-        except NoResultFound:
+        except (NoResultFound, MultipleResultsFound):
             return None
 
 
