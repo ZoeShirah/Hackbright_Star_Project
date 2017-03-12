@@ -14,7 +14,7 @@ Bowl Full of Stars is the 4 week project that I completed during my time as an s
 <b>Frontend:</b> JavaScript, jQuery, AJAX, Jinja, Bootstrap, HTML5, CSS<br/>
 <b>APIs:</b> Google Maps<br/>
 
-## <a name="database model"></a>Database Model
+<!-- ## <a name="database model"></a>Database Model -->
 
 ## <a name="features"></a>Features
 
@@ -23,6 +23,18 @@ The sky maps are viewable in four directions, the current direction is visible i
 
 A button can be clicked to view the Constellations
 ![alt text](screenshots/Constellations.png "Constellations")
+
+Images of the constellations appear on the right, on mouseover of a constellation name in the list
+![alt text](screenshots/Perseus.png "Asterism")
+
+Information about stars and constellations is visible on mouseover
+![alt text](screenshots/mouseover.png "Info")
+
+Planets, and the sun and moon, are also visible, using information from the python library ephmeral
+![alt text](screenshots/Venus.png "Planets")
+
+Images of the constellations appears on the right on mouseover of a constellation name in the list
+![alt text](screenshots/mouseover.png "Info")
 
 ## <a name="features"></a>Installation
 To run Bowl Full of Stars:
