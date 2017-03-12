@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
-from flask_debugtoolbar import DebugToolbarExtension
+# from flask_debugtoolbar import DebugToolbarExtension
 import json
 from model import Star, User, connect_to_db, db
 #helper files
@@ -278,13 +278,20 @@ def update_session(lat=None, lon=None):
 if __name__ == "__main__":  # pragma: no cover
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
-    app.debug = True
-    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-    app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
+    # app.debug = True
+    # app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+    # app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
 
-    connect_to_db(app)
+    # connect_to_db(app)
 
-    # Use the DebugToolbar
-    # DebugToolbarExtension(app)
+    connect_to_db(app, os.environ.get("DATABASE_URL"))
 
-    app.run(port=5000, host='0.0.0.0')
+    # Create the tables we need from our models (if they already
+    # exist, nothing will happen here, so it's fine to do this each
+    # time on startup)
+    db.create_all(app=app)
+
+    DEBUG = "NO_DEBUG" not in os.environ
+    PORT = int(os.environ.get("PORT", 5000))
+
+    app.run(host="0.0.0.0", port=PORT, debug=DEBUG)
