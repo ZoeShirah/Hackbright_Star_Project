@@ -233,7 +233,7 @@ font-family: 'Italianno', cursive;
 font-family: 'Herr Von Muellerhoff', cursive;
 font-family: 'Meddon', cursive;*/
 }
-h3.cursive {
+h2.cursive {
   font-family: 'Tangerine', cursive;
   font-size:35px;
 }
@@ -241,4 +241,14 @@ h3.cursive {
 .black {
   background: rgba(0,0,0,0.3);
   color: white;
+}
+
+.dotted-form {
+  width:550px;
+  border-width:1px;
+  border-style: dotted;
+  border-color: white;
+  padding:6px;
+  padding-bottom: 10px;
+  padding-left:10px;
 }

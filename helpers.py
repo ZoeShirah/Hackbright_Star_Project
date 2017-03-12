@@ -49,7 +49,7 @@ def get_userStar_dict(user_id):
         if UStar.name.strip():
             star_name = UStar.name
             star_dict[UStar.star_id].update({'name': star_name})
-            altAz = g.get_altaz(UStar)
+        altAz = g.get_altaz(UStar)
         visible = c.get_visible_window(altAz.alt, altAz.az)
         if visible:
             star_dict[UStar.star_id].update({'visible': visible})

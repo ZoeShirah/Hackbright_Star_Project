@@ -13,17 +13,20 @@
 <h3>your location:</h3> {{ user.lat }}, {{ user.lon }}
 {% endif%}
 <br><br>
-<h4>Set Your Location:</h4>
-<form action="/set_user_location" class="latlng">
-    Enter a location: &emsp; <input id="geocomp" type="text" placeholder="Type in an address" />
-      <fieldset>
-        <label for="lat">Latitude:</label>&emsp;
-        <input type="number" step="any" name="lat" placeholder="degrees as a decimal" value="">
-        <label for="lng">Longitude:</label>&emsp;
-        <input type="number" step="any" name="lng" placeholder="degrees as a decimal" value=""><br>
-      </fieldset>
-    <input type="submit">
-</form>
+<div class="dotted-form">
+    <h4>Set Your Location:</h4>
+    <form class="form-inline latlng" action="/set_user_location" id="otherParams">
+    <input id="geocomp" class="form-control" type="text" placeholder="Type in an address"><br>
+  <div class="form-group">
+    <fieldset>
+       <!-- <label class="sr-only" for="lat">Latitude:</label>&emsp; -->
+        <input type="number" class="form-control" step="any" name="lat" placeholder="Latitude" value="">
+        <!-- <label class="sr-only" for="lng">Longitude:</label>&emsp; -->
+        <input class="form-control" type="number" step="any" name="lng" placeholder="Longitude" value="">&emsp;<button type="submit" class="btn btn-default black">Submit</button><br>
+      </fieldset> 
+  </div>
+</form></div>
+
 {% endif %}
 {% if stars | length > 0 %}
 <h3>Saved Stars:</h3>
