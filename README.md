@@ -33,8 +33,14 @@ Information about stars and constellations is visible on mouseover
 Planets, and the sun and moon, are also visible, using information from the python library ephmeral
 ![alt text](screenshots/Venus.png "Planets")
 
-Images of the constellations appears on the right on mouseover of a constellation name in the list
-![alt text](screenshots/mouseover.png "Info")
+The location can be changed in a menu below the star map.  Google Maps will autfill the latitude and longitude when the user inputs a location.
+![alt text](screenshots/Autofill.png "Change Loaction")
+
+Each star has its own info page, if the star is visible at the default location, this page will also note in which direction to look for it.
+![alt text](screenshots/StarInfo.png "Info")
+
+Users can create an account where they can set thier own default location and save stars of interest.  If those stars are visible in thier default window the direction in which to look is displayed next to the name.
+![alt text](screenshots/UserInfo.png "Users")
 
 ## <a name="features"></a>Installation
 To run Bowl Full of Stars:
