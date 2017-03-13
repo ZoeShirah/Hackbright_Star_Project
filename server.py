@@ -198,8 +198,8 @@ def create_constellation_json(direction):
 def create_planet_json(direction):
     """ Take the user selected direction and returns visible planets."""
 
-    lat = session.get("d_lat", 37.7887459)
-    lon = session.get("d_lon", -122.41158519999999)
+    lat = session.get("lat",  0.6592968944837353)
+    lon = session.get("lon", -2.1366218688419805)
     time = session.get("time", datetime.utcnow())
 
     planet_data = get_planet_info(time, lat, lon, direction)
@@ -284,7 +284,7 @@ if __name__ == "__main__":  # pragma: no cover
 
     # connect_to_db(app)
 
-    connect_to_db(app, os.environ.get("DATABASE_URL"))
+    connect_to_db(app, os.environ.get("DATABASE_URL", "postgresql:///stars"))
 
     # Create the tables we need from our models (if they already
     # exist, nothing will happen here, so it's fine to do this each

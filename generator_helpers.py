@@ -133,6 +133,7 @@ def get_planet_info(date, lat, lon, direction):
     observer.lat = lat
     observer.lon = lon
     observer.date = date
+    print "date", observer.date, "lat", observer.lat, lat
 
     sun = {"name": "Sun", "info": ephem.Sun(), "color": "#ffffcc"}
     mercury = {"name": "Mercury", "info": ephem.Mercury(), "color": "##ffe5bf"}
@@ -152,7 +153,7 @@ def get_planet_info(date, lat, lon, direction):
         print planet['info'].alt, planet['info'].az, repr(planet['info'].alt)
         planet['alt'] = planet['info'].alt
         planet['az'] = planet['info'].az
-        print planet['alt'], planet['az']
+        print planet['alt'], planet['az'], planet['name']
         visible = c.get_visible_window(planet['alt'], planet['az'])
         print visible
         if direction in visible:

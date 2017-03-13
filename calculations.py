@@ -35,10 +35,10 @@ def convert_degrees_to_radians(decimaldegree):
     """Convert degrees to radians, 1 degree = pi/180 radians
 
     >>> convert_degrees_to_radians(37.7749295)
-    Decimal('0.6592968944837353120174781444')
+    0.6592968944837353
 
     >>> convert_degrees_to_radians(-122.4194155)
-    Decimal('-2.136621868841980316338232946')
+    -2.1366218688419805
 
     """
     return float(Decimal(decimaldegree)*Decimal(math.pi/180))
