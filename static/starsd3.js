@@ -37,7 +37,7 @@ function getDirection(){
     var direction = d3.select('#directionValues').node().value;
     var url = "/star_data.json/" + direction;
     d3.json(url, printStarData);   
-    setTimeout(activateMenu, 5000);
+    setTimeout(activateMenu, 20000);
 }
 
 function getPlanets(){
