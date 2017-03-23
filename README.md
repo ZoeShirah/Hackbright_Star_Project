@@ -1,4 +1,5 @@
 # Bowl Full of Stars
+Deployed! http://evening-shelf-57060.herokuapp.com/
 Bowl Full of Stars is the 4 week project that I completed during my time as an software engineering fellow at Hackbright.  Bowl Full of Stars is a web app that generates an image of the stars in the sky as viewed from different locations and times of day.  Users can create an account and save thier home location so that it will automatically generate the sky at that location when they are logged in.  
 
 ![alt text](screenshots/Homepage.png "Homepage")
@@ -89,6 +90,8 @@ Run the app:
 python server.py
 ```
 
-You can now navigate to 'localhost:5000/' to access Recruiter.
+You can now navigate to 'localhost:5000/' to use Bowl Full of Stars.
+Or check out the heroku app! http://evening-shelf-57060.herokuapp.com/
+
 
 
