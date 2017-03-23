@@ -15,7 +15,7 @@ from helpers import find_star, validate_login, save_a_star
 
 app = Flask(__name__)
 # Required to use Flask sessions and the debug toolbar
-app.secret_key = "Polaris8222"
+app.secret_key = os.environ['FLASK_SECRET']
 # So that if you use an undefined variable in Jinja2, it raises an error.
 app.jinja_env.undefined = StrictUndefined
 SECRET = os.environ['GOOGLE_API_KEY']
