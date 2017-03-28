@@ -10,7 +10,28 @@ var EastConsts = null;
 var WestConsts = null;
 
 setInfo();
-$( document ).ready(function() {
+var myVar;
+
+// tests if there are circles in the DOM 4 times per second
+var testAppearTmr = setInterval(function() {
+    if ($('circle').length) {
+        clearInterval(testAppearTmr);
+        console.log("here I am!")
+        activateMenu();
+        myFunction();
+    }
+}, 250);
+
+function myFunction() {
+    myVar = setTimeout(showPage, 3000);
+}
+
+function showPage() {
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("d3starfield").style.visibility = "visible";
+}
+
+$(document).ready(function() {
   console.log("ready");
   getDirection();
   getPlanets();
@@ -37,7 +58,6 @@ function getDirection(){
     var direction = d3.select('#directionValues').node().value;
     var url = "/star_data.json/" + direction;
     d3.json(url, printStarData);   
-    setTimeout(activateMenu, 20000);
 }
 
 function getPlanets(){

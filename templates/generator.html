@@ -13,8 +13,8 @@
 </form>
 <button type="button" class="btn btn-default black const hidden" id="constellations" disabled>Constellations</button>
 <button type="button" class="btn btn-default black const hidden" id="clear" disabled>Clear</button>
-<div class="box indented">
-    <div id='d3starfield'></div>
+<div class="box indented" onload="myFunction()">
+    <div id='d3starfield' style="visibility:visible;" class="animate-bottom"></div>
     <div class='rarrow arrow'>
         <img src='/static/arrow-right.png' alt="arrow" class="image">
     </div>
@@ -26,6 +26,7 @@
     </div>
     <div id="v_const" class="btn-group-vertical" role="group"></div>
 </div>
+ <div id="loader"></div>
 <!-- displaying time and location -->
 <p class="indented">{% if "d_lat" in session %}
     Latitude: {{ '%.10f' | format(session['d_lat']) }}&deg;&emsp;

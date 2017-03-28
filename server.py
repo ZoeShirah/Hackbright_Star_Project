@@ -276,22 +276,23 @@ def update_session(lat=None, lon=None):
         session["d_lon"] = float(lon)
 
 if __name__ == "__main__":  # pragma: no cover
-    # We have to set debug=True here, since it has to be True at the
-    # point that we invoke the DebugToolbarExtension
+
+    # while developing/debugging *********
     # app.debug = True
     # app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     # app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
-
-    # connect_to_db(app)
+    #***********************************
 
     connect_to_db(app, os.environ.get("DATABASE_URL", "postgresql:///stars"))
 
-    # Create the tables we need from our models (if they already
-    # exist, nothing will happen here, so it's fine to do this each
-    # time on startup)
     db.create_all(app=app)
-
-    DEBUG = "NO_DEBUG" not in os.environ
     PORT = int(os.environ.get("PORT", 5000))
 
+    #while developing/debugging ****************
+    # app.run(host="0.0.0.0", port=PORT)
+    # #***********************************
+
+    #for deployment on heroku ***********
+    DEBUG = "NO_DEBUG" not in os.environ
     app.run(host="0.0.0.0", port=PORT, debug=DEBUG)
+    #********************************
